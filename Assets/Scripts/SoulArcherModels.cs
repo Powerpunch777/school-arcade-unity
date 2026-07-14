@@ -64,6 +64,11 @@ namespace SoulArcher
         public const int Ui = 100;
     }
 
+    public static class ArenaRules
+    {
+        public static Vector3 ClampEnemy(Vector3 position) { return new Vector3(Mathf.Clamp(position.x, -7.8f, 7.8f), Mathf.Clamp(position.y, -3.6f, 3.6f), 0f); }
+    }
+
     [Serializable]
     public sealed class RoomState
     {

@@ -21,6 +21,6 @@
 ## 최종 검증
 
 - Unity batchmode 컴파일 오류 0개
-- EditMode `total=24`, `passed=24`, `failed=0`
+- EditMode `total=25`, `passed=25`, `failed=0`
 - 전체 캠페인 통합 테스트에서 숲·동굴·성, 상점, 보스 3종, 스테이지당 능력 2회, 엔딩과 결과 저장까지 통과
 - Windows 빌드 성공 및 실제 창 모드에서 타이틀·난이도·도입 컷신·첫 전투 화면 확인

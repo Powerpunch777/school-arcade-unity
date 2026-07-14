@@ -60,6 +60,7 @@ public class SoulArcherModelsTests
         }
     }
     [Test] public void MovingPlayerCannotFireNewArrow() { Assert.IsFalse(AutoAimRules.CanFire(true, true, 2f, 1f)); }
+    [Test] public void EnemiesCannotLeaveTheVisibleArena() { var clamped = ArenaRules.ClampEnemy(new Vector3(50f, -50f, 3f)); Assert.AreEqual(7.8f, clamped.x); Assert.AreEqual(-3.6f, clamped.y); Assert.AreEqual(0f, clamped.z); }
     [Test] public void PlayerCanReachBothRoomExits() {
         Assert.IsTrue(RoomExitRules.CanMoveThroughExit(RoomExitRules.PlayerMaxX, 0, 5, true));
         Assert.AreEqual(1, RoomExitRules.DestinationFor(RoomExitRules.PlayerMaxX, 0));

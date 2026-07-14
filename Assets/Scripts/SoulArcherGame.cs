@@ -678,6 +678,7 @@ namespace SoulArcher
                 case EnemyType.GiantBat: transform.position += (Vector3)(new Vector2(-direction.y, direction.x) * 1.1f * Time.deltaTime); BossPattern(direction, 1.2f, 1.5f, 9f); break;
                 case EnemyType.Morkan: BossPattern(direction, BossPhase == 2 ? 1.5f : 1f, BossPhase == 2 ? .75f : 1.25f, 10f); break;
             }
+            transform.position = ArenaRules.ClampEnemy(transform.position);
             if (distance < (type == EnemyType.TreeSpirit || type == EnemyType.GiantBat || type == EnemyType.Morkan ? 1.2f : .7f)) game.DamagePlayer(type == EnemyType.TreeSpirit || type == EnemyType.GiantBat || type == EnemyType.Morkan ? 1f : .5f);
         }
         private void Shoot(Vector2 direction, float damage, float cooldown, float range) { if (Time.time >= nextAction && Vector2.Distance(transform.position, player.transform.position) < range) { game.SpawnEnemyShot(transform.position, direction, damage); nextAction = Time.time + cooldown; } }
