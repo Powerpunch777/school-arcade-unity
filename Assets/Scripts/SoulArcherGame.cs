@@ -309,7 +309,7 @@ namespace SoulArcher
             if (!AutoAimRules.CanFire(player.IsMoving, targetIndex >= 0, Time.time, nextShot)) return;
             var target = visibleEnemies[targetIndex];
             var go = MakeActor("Arrow", Color.yellow, player.transform.position, .18f, SpriteSorting.Projectile, "Art/Player/Leon/arrow");
-            var arrow = go.AddComponent<ProjectileActor>(); arrow.Initialize(this, player.transform.position, (target.transform.position - player.transform.position).normalized, false, stats.attack, stats.pierce); projectiles.Add(arrow); PlayEffect("Audio/sfx_arrow_fire");
+            var arrow = go.AddComponent<ProjectileActor>(); arrow.Initialize(this, player.transform.position, (target.transform.position - player.transform.position).normalized, false, stats.attack, stats.pierce, stats.reflect); projectiles.Add(arrow); PlayEffect("Audio/sfx_arrow_fire");
             nextShot = Time.time + stats.attackInterval;
         }
         public void SpawnEnemyShot(Vector3 origin, Vector3 direction, float damage)
@@ -488,11 +488,19 @@ namespace SoulArcher
 
     public sealed class ProjectileActor : MonoBehaviour
     {
-        private SoulArcherGame game; private Vector2 direction; private bool hostile; private float damage; private int pierce; private float life;
-        public void Initialize(SoulArcherGame owner, Vector3 origin, Vector2 travel, bool isHostile, float amount, int pierceCount) { game = owner; transform.position = origin; direction = travel; hostile = isHostile; damage = amount; pierce = pierceCount; }
+        private SoulArcherGame game; private Vector2 direction; private bool hostile; private float damage; private int pierce; private int reflect; private float life;
+        public void Initialize(SoulArcherGame owner, Vector3 origin, Vector2 travel, bool isHostile, float amount, int pierceCount, int reflectCount = 0) { game = owner; transform.position = origin; direction = travel; hostile = isHostile; damage = amount; pierce = pierceCount; reflect = reflectCount; }
         public void Tick()
         {
             life += Time.deltaTime; transform.position += (Vector3)(direction * (hostile ? 3.2f : 9f) * Time.deltaTime);
+            if (!hostile && reflect > 0 && (Mathf.Abs(transform.position.x) > 8.7f || Mathf.Abs(transform.position.y) > 4.2f))
+            {
+                bool hitX = Mathf.Abs(transform.position.x) > 8.7f;
+                bool hitY = Mathf.Abs(transform.position.y) > 4.2f;
+                direction = new Vector2(hitX ? -direction.x : direction.x, hitY ? -direction.y : direction.y).normalized;
+                transform.position = new Vector3(Mathf.Clamp(transform.position.x, -8.7f, 8.7f), Mathf.Clamp(transform.position.y, -4.2f, 4.2f), transform.position.z);
+                reflect--;
+            }
             if (life > 3f || Mathf.Abs(transform.position.x) > 10f || Mathf.Abs(transform.position.y) > 6f) { Destroy(gameObject); return; }
             if (hostile)
             {

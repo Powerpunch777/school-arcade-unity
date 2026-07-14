@@ -10,6 +10,7 @@ public class SoulArcherModelsTests
     [Test] public void DamageStartsInvincibilityAndDeath() { var s = new PlayerStats(); Assert.IsTrue(s.TakeDamage(1f, 0f)); Assert.IsFalse(s.TakeDamage(1f, .2f)); Assert.AreEqual(4f, s.hearts); Assert.IsTrue(s.TakeDamage(4f, 1f)); Assert.IsTrue(s.dead); }
     [Test] public void RoomStateTracksVisitClearAndRevisit() { var g = new RoomGraph(); Assert.IsTrue(g.TryMove(1)); Assert.IsTrue(g.Rooms[1].visited); g.ClearCurrent(); Assert.IsTrue(g.Current.cleared); Assert.IsTrue(g.TryMove(0)); Assert.IsTrue(g.TryMove(1)); }
     [Test] public void AbilitySelectionChangesStats() { var s = new PlayerStats(); AbilityRules.Apply(s, Ability.Attack); AbilityRules.Apply(s, Ability.Pierce); Assert.AreEqual(12f, s.attack); Assert.AreEqual(1, s.pierce); }
+    [Test] public void ReflectAbilityTracksIndependentStacks() { var s = new PlayerStats(); AbilityRules.Apply(s, Ability.Reflect); Assert.AreEqual(1, s.reflect); Assert.AreEqual(1, s.StackCount(Ability.Reflect)); Assert.AreEqual(0, s.shieldCharges); }
     [Test] public void SoulsSupportShopEconomy() { var s = new PlayerStats { souls = 15 }; Assert.GreaterOrEqual(s.souls, 15); s.souls -= 15; s.shieldCharges++; Assert.AreEqual(0, s.souls); Assert.AreEqual(1, s.shieldCharges); }
     [Test] public void RestartRunResetsStateAndRemovesSpawnedActors() {
         Camera initialCamera = Camera.main;
