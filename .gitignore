@@ -16,6 +16,10 @@
 *.sln
 *.user
 
+# Local verification output
+*.log
+Tests/*-results.xml
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 27
+  productGUID: 6a77c3f5b3e0469a8c4e3e3d4d4a6b01
+  companyName: Paperclip School Arcade
+  productName: Soul Archer
+  defaultScreenWidth: 1920
+  defaultScreenHeight: 1080
+  fullscreenMode: 3
+  runInBackground: 1
+  allowFullscreenSwitch: 1
+  resizableWindow: 1
+  usePlayerLog: 1
+  visibleInBackground: 1
+  activeInputHandler: 0
+  bundleVersion: 0.1.0
+  applicationIdentifier:
+    Standalone: com.paperclip.schoolarcade.soularc​​her
+  scriptingBackend:
+    Standalone: 0

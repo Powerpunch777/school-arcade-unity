@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.0361639">
+  <test-suite type="TestSuite" id="1000" name="Soul Archer" fullname="Soul Archer" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.036164" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1015" name="SoulArcher.EditorTests.dll" fullname="C:/Users/young/Documents/Game Design/school-arcade-unity/Library/ScriptAssemblies/SoulArcher.EditorTests.dll" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.030954" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="33680" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestFixture" id="1001" name="SoulArcherModelsTests" fullname="SoulArcherModelsTests" classname="SoulArcherModelsTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.030209" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1004" name="AbilitySelectionChangesStats" fullname="SoulArcherModelsTests.AbilitySelectionChangesStats" methodname="AbilitySelectionChangesStats" classname="SoulArcherModelsTests" runstate="Runnable" seed="1371281530" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.009085" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1002" name="DamageStartsInvincibilityAndDeath" fullname="SoulArcherModelsTests.DamageStartsInvincibilityAndDeath" methodname="DamageStartsInvincibilityAndDeath" classname="SoulArcherModelsTests" runstate="Runnable" seed="287934937" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000447" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1011" name="DisplayDefaultsMatchIntegerScaledFhdDesign" fullname="SoulArcherModelsTests.DisplayDefaultsMatchIntegerScaledFhdDesign" methodname="DisplayDefaultsMatchIntegerScaledFhdDesign" classname="SoulArcherModelsTests" runstate="Runnable" seed="1718981067" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000769" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1009" name="EnemyRewardsDifferForRegularEnemiesAndBoss" fullname="SoulArcherModelsTests.EnemyRewardsDifferForRegularEnemiesAndBoss" methodname="EnemyRewardsDifferForRegularEnemiesAndBoss" classname="SoulArcherModelsTests" runstate="Runnable" seed="2078454623" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.001592" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1010" name="ForestCombatRewardsAllowFirstShopPurchase" fullname="SoulArcherModelsTests.ForestCombatRewardsAllowFirstShopPurchase" methodname="ForestCombatRewardsAllowFirstShopPurchase" classname="SoulArcherModelsTests" runstate="Runnable" seed="89925829" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000254" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1007" name="MovingPlayerCannotFireNewArrow" fullname="SoulArcherModelsTests.MovingPlayerCannotFireNewArrow" methodname="MovingPlayerCannotFireNewArrow" classname="SoulArcherModelsTests" runstate="Runnable" seed="1192067355" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000071" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1008" name="PlayerCanReachBothRoomExits" fullname="SoulArcherModelsTests.PlayerCanReachBothRoomExits" methodname="PlayerCanReachBothRoomExits" classname="SoulArcherModelsTests" runstate="Runnable" seed="114676676" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000133" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1006" name="RestartRunResetsStateAndRemovesSpawnedActors" fullname="SoulArcherModelsTests.RestartRunResetsStateAndRemovesSpawnedActors" methodname="RestartRunResetsStateAndRemovesSpawnedActors" classname="SoulArcherModelsTests" runstate="Runnable" seed="680300967" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.009133" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1003" name="RoomStateTracksVisitClearAndRevisit" fullname="SoulArcherModelsTests.RoomStateTracksVisitClearAndRevisit" methodname="RoomStateTracksVisitClearAndRevisit" classname="SoulArcherModelsTests" runstate="Runnable" seed="836479867" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000128" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1012" name="ShopPurchaseSpendsSoulsAndAppliesItemOnce" fullname="SoulArcherModelsTests.ShopPurchaseSpendsSoulsAndAppliesItemOnce" methodname="ShopPurchaseSpendsSoulsAndAppliesItemOnce" classname="SoulArcherModelsTests" runstate="Runnable" seed="711306583" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000117" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1013" name="SortingOrderKeepsActorsAboveRoomAndProjectilesAboveActors" fullname="SoulArcherModelsTests.SortingOrderKeepsActorsAboveRoomAndProjectilesAboveActors" methodname="SortingOrderKeepsActorsAboveRoomAndProjectilesAboveActors" classname="SoulArcherModelsTests" runstate="Runnable" seed="592834146" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000123" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1005" name="SoulsSupportShopEconomy" fullname="SoulArcherModelsTests.SoulsSupportShopEconomy" methodname="SoulsSupportShopEconomy" classname="SoulArcherModelsTests" runstate="Runnable" seed="1551434537" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000074" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1014" name="StoppedPlayerSelectsNearestLivingVisibleEnemy" fullname="SoulArcherModelsTests.StoppedPlayerSelectsNearestLivingVisibleEnemy" methodname="StoppedPlayerSelectsNearestLivingVisibleEnemy" classname="SoulArcherModelsTests" runstate="Runnable" seed="1639396059" result="Passed" start-time="2026-07-14 18:30:07Z" end-time="2026-07-14 18:30:07Z" duration="0.000493" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: Documentation/QA/CMP-207-editmode-results.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
