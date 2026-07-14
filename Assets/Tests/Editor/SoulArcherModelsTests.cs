@@ -3,11 +3,12 @@ using SoulArcher;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 public class SoulArcherModelsTests
 {
     [Test] public void DamageStartsInvincibilityAndDeath() { var s = new PlayerStats(); Assert.IsTrue(s.TakeDamage(1f, 0f)); Assert.IsFalse(s.TakeDamage(1f, .2f)); Assert.AreEqual(4f, s.hearts); Assert.IsTrue(s.TakeDamage(4f, 1f)); Assert.IsTrue(s.dead); }
-    [Test] public void RoomStateTracksVisitClearAndRevisit() { var g = new RoomGraph(); Assert.IsTrue(g.TryMove(1)); Assert.IsTrue(g.Rooms[1].visited); g.ClearCurrent(); Assert.IsTrue(g.Current.cleared); Assert.IsTrue(g.TryMove(0)); Assert.IsTrue(g.TryMove(1)); }
+    [Test] public void RoomStateTracksVisitClearAndRevisit() { var g = new RoomGraph(); Assert.IsFalse(g.TryMove(1)); g.ClearCurrent(); Assert.IsTrue(g.TryMove(1)); Assert.IsTrue(g.Rooms[1].visited); g.ClearCurrent(); Assert.IsTrue(g.Current.cleared); Assert.IsTrue(g.TryMove(0)); Assert.IsTrue(g.TryMove(1)); }
     [Test] public void AbilitySelectionChangesStats() { var s = new PlayerStats(); AbilityRules.Apply(s, Ability.Attack); AbilityRules.Apply(s, Ability.Pierce); Assert.AreEqual(12f, s.attack); Assert.AreEqual(1, s.pierce); }
     [Test] public void ReflectAbilityTracksIndependentStacks() { var s = new PlayerStats(); AbilityRules.Apply(s, Ability.Reflect); Assert.AreEqual(1, s.reflect); Assert.AreEqual(1, s.StackCount(Ability.Reflect)); Assert.AreEqual(0, s.shieldCharges); }
     [Test] public void SoulsSupportShopEconomy() { var s = new PlayerStats { souls = 15 }; Assert.GreaterOrEqual(s.souls, 15); s.souls -= 15; s.shieldCharges++; Assert.AreEqual(0, s.souls); Assert.AreEqual(1, s.shieldCharges); }
@@ -23,6 +24,7 @@ public class SoulArcherModelsTests
             AbilityRules.Apply(game.CurrentStats, Ability.Attack);
             AbilityRules.Apply(game.CurrentStats, Ability.Pierce);
             game.DamagePlayer(1f);
+            game.CurrentGraph.ClearCurrent();
             game.CurrentGraph.TryMove(1);
             game.CurrentGraph.ClearCurrent();
 
@@ -82,6 +84,8 @@ public class SoulArcherModelsTests
         Assert.AreEqual(360, DisplaySettings.InternalHeight);
         Assert.AreEqual(1920, DisplaySettings.DefaultOutputWidth);
         Assert.AreEqual(1080, DisplaySettings.DefaultOutputHeight);
+        Assert.AreEqual(1280, DisplaySettings.WindowedWidth);
+        Assert.AreEqual(720, DisplaySettings.WindowedHeight);
         Assert.AreEqual(FullScreenMode.FullScreenWindow, DisplaySettings.DefaultFullscreenMode);
     }
     [Test] public void ShopPurchaseSpendsSoulsAndAppliesItemOnce() {
@@ -148,13 +152,81 @@ public class SoulArcherModelsTests
         Assert.LessOrEqual(cards.Count, 3);
     }
 
+    [Test] public void AbilityBonusesUseAdditiveDesignValues() {
+        var stats = new PlayerStats();
+        for (int i = 0; i < 3; i++) { AbilityRules.Apply(stats, Ability.Attack); AbilityRules.Apply(stats, Ability.Speed); AbilityRules.Apply(stats, Ability.Move); }
+        Assert.AreEqual(16f, stats.attack, .001f);
+        Assert.AreEqual(PlayerStats.BaseAttackInterval * .55f, stats.attackInterval, .001f);
+        Assert.AreEqual(6.5f, stats.moveSpeed, .001f);
+    }
+
+    [Test] public void WhetstoneExpiresAtStageBoundaryWithoutRemovingAbilityBonus() {
+        var stats = new PlayerStats { souls = 20 }; var bought = ShopRules.CreatePurchaseState();
+        AbilityRules.Apply(stats, Ability.Attack);
+        Assert.IsTrue(ShopRules.TryPurchase(stats, 2, bought));
+        Assert.AreEqual(14.4f, stats.attack, .001f);
+        stats.ResetStageEffects();
+        Assert.AreEqual(12f, stats.attack, .001f);
+    }
+
+    [Test] public void ShieldDoesNotDisappearDuringInvincibility() {
+        var stats = new PlayerStats(); Assert.IsTrue(stats.TakeDamage(1f, 0f)); stats.shieldCharges = 1;
+        Assert.IsFalse(stats.TakeDamage(1f, .2f)); Assert.AreEqual(1, stats.shieldCharges);
+        Assert.IsFalse(stats.TakeDamage(1f, 1f)); Assert.AreEqual(0, stats.shieldCharges); Assert.AreEqual(4f, stats.hearts);
+    }
+
+    [Test] public void RoomGraphBranchesAndOffersExactlyTwoAbilityRoomsPerStage() {
+        foreach (StageId stage in StageRules.Order) {
+            var graph = new RoomGraph(stage);
+            Assert.IsTrue(graph.HasNeighbor(0, RoomDirection.East));
+            Assert.IsTrue(graph.HasNeighbor(0, RoomDirection.North));
+            Assert.AreEqual(2, graph.Rooms.Count(r => r.kind == RoomKind.Combat && r.offersAbility));
+            Assert.IsTrue(graph.Rooms.Single(r => r.kind == RoomKind.Boss).gridX > graph.Rooms[0].gridX);
+        }
+        Assert.AreEqual(RoomDirection.North, RoomExitRules.ExitDirection(0f, RoomExitRules.PlayerMaxY));
+    }
+
+    [Test] public void FullCampaignProgressesThroughThreeStagesWithSixAbilityChoices() {
+        RunHistory.Clear(); Camera initialCamera = Camera.main; var root = new GameObject("Full Campaign Fixture"); var game = root.AddComponent<SoulArcherGame>();
+        try {
+            game.Start();
+            foreach (StageId stage in StageRules.Order) {
+                Assert.AreEqual(stage, game.CurrentGraph.Stage);
+                DefeatCurrentRoom(game); InvokePrivate(game, "Update"); Assert.AreEqual(ScreenState.Ability, game.CurrentScreen); InvokePrivate(game, "SelectAbility", 0);
+                game.ChangeRoom(RoomDirection.East);
+                DefeatCurrentRoom(game); InvokePrivate(game, "Update"); Assert.AreEqual(ScreenState.Ability, game.CurrentScreen); InvokePrivate(game, "SelectAbility", 0);
+                game.ChangeRoom(RoomDirection.North);
+                DefeatCurrentRoom(game); InvokePrivate(game, "Update"); Assert.AreEqual(ScreenState.Play, game.CurrentScreen);
+                game.ChangeRoom(RoomDirection.West); Assert.AreEqual(ScreenState.Shop, game.CurrentScreen); game.CurrentGraph.ClearCurrent();
+                game.ChangeRoom(RoomDirection.East); game.ChangeRoom(RoomDirection.East);
+                DefeatCurrentRoom(game); InvokePrivate(game, "Update");
+                if (stage == StageId.Castle) Assert.AreEqual(ScreenState.Ending, game.CurrentScreen);
+                else { Assert.AreEqual(ScreenState.StageTransition, game.CurrentScreen); InvokePrivate(game, "ContinueStage"); }
+            }
+            Assert.AreEqual(AbilityRules.ChoicesPerRun, game.AbilityChoices);
+            InvokePrivate(game, "FinishRun", true); Assert.AreEqual(ScreenState.Result, game.CurrentScreen);
+            Assert.AreEqual(1, RunHistory.Load().records.Count); Assert.IsTrue(RunHistory.Load().records[0].victory);
+        }
+        finally { Object.DestroyImmediate(root); if (initialCamera == null && Camera.main != null) Object.DestroyImmediate(Camera.main.gameObject); RunHistory.Clear(); }
+    }
+
+    private static void DefeatCurrentRoom(SoulArcherGame game) {
+        foreach (var enemy in Object.FindObjectsByType<EnemyActor>()) if (enemy != null && enemy.transform.IsChildOf(game.transform)) enemy.TakeDamage(10000f);
+        Assert.AreEqual(0, game.ActiveEnemyCount);
+    }
+
+    private static void InvokePrivate(SoulArcherGame game, string methodName, params object[] arguments) {
+        var method = typeof(SoulArcherGame).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.IsNotNull(method, methodName); method.Invoke(game, arguments);
+    }
+
     [Test] public void RunHistoryKeepsOnlyRecentTwentyNonPersonalRecords() {
         RunHistory.Clear();
         for (int i = 0; i < 21; i++) RunHistory.Save(new RunRecord { victory = i % 2 == 0, seconds = i, reachedStage = 1, reachedRoom = 1, abilities = "공격" });
         var records = RunHistory.Load().records;
         Assert.AreEqual(20, records.Count);
         Assert.AreEqual(10, RunHistory.Wins());
-        Assert.AreEqual("공격", RunHistory.MostSelectedAbility());
+        Assert.AreEqual("공격 (20회)", RunHistory.MostSelectedAbility());
         RunHistory.Clear();
     }
 }

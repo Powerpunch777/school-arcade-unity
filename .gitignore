@@ -19,6 +19,7 @@
 # Local verification output
 *.log
 Tests/*-results.xml
+Tests/visual-*.png
 
 # OS files
 .DS_Store

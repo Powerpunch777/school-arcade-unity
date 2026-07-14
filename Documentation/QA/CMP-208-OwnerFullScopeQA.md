@@ -1,0 +1,33 @@
+# CMP-208 Owner 전체 범위 QA
+
+## 결과
+
+- 판정: `PASS`
+- 검증일: 2026-07-15
+- Unity: `6000.5.3f1`
+- 대상: 숲·동굴·마왕의 성 전체 캠페인과 Windows 빌드
+
+## 발견 및 교정
+
+초기 Worker 결과에서 능력 선택 6회가 앞 스테이지에 몰리는 문제, 공격·이동 속도 누적값 오류, 일자형 방 구조, 상점 임시 효과 유지, 전적 20건 조회 누락, 마우스 UI 누락, 스프라이트 시트 전체가 한 장으로 표시되는 문제가 확인됐다. Owner 검토에서 같은 구현 범위 안에서 교정하고 회귀 테스트를 추가했다.
+
+## 자동 검증
+
+- 컴파일 로그: `Tests/cto-compile.log`, C# 오류 0개, 정상 종료
+- 테스트 XML: `Tests/cto-editmode-results.xml`
+- 결과: `total=24`, `passed=24`, `failed=0`, `skipped=0`
+- 전체 진행 테스트: `FullCampaignProgressesThroughThreeStagesWithSixAbilityChoices`
+- 규칙 테스트: 분기 방 연결, 스테이지당 능력 방 2개, 가산 능력 수치, 보호 부적 무적 구간, 스테이지 한정 숫돌, 최근 20판 저장
+
+## Windows 검증
+
+- 빌드 로그: `Tests/cto-build.log`
+- 결과: `Build Finished, Result: Success`
+- 실행 파일: `Builds/CMP-208/SoulArcher.exe`
+- 실제 창 실행 스모크: 13.1초 후 프로세스 생존 확인
+- 실제 창 실행에서 타이틀, 쉬움/보통 선택, 도입 컷신, 승인 스프라이트·타일·화살, 5하트 HUD, 자동 조준 표시와 미니맵을 확인했다.
+
+## 남은 비필수 제한
+
+- 방 내부 장애물의 세밀한 물리 충돌과 화면 밖 적 경고 화살표는 구현하지 않았다.
+- 외부 배포, WebGL, 모바일과 영어 현지화는 승인 범위 밖이다.

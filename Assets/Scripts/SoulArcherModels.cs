@@ -7,6 +7,7 @@ namespace SoulArcher
 {
     public enum StageId { Forest, Cave, Castle }
     public enum RoomKind { Combat, Shop, Boss }
+    public enum RoomDirection { West, East, North, South }
     public enum Difficulty { Easy, Normal }
     public enum Ability { Attack, Speed, Pierce, Reflect, Heal, Move }
     public enum EnemyType
@@ -34,13 +35,24 @@ namespace SoulArcher
     {
         public const float PlayerMinX = -8.8f;
         public const float PlayerMaxX = 8.8f;
+        public const float PlayerMinY = -4.3f;
+        public const float PlayerMaxY = 4.3f;
         public const float TransitionX = 8.65f;
+        public const float TransitionY = 4.15f;
         public static bool CanMoveThroughExit(float x, int currentRoomId, int roomCount, bool roomReady)
         {
             if (!roomReady || roomCount <= 0) return false;
             return (x > TransitionX && currentRoomId < roomCount - 1) || (x < -TransitionX && currentRoomId > 0);
         }
         public static int DestinationFor(float x, int currentRoomId) { return x > TransitionX ? currentRoomId + 1 : currentRoomId - 1; }
+        public static RoomDirection? ExitDirection(float x, float y)
+        {
+            if (x > TransitionX) return RoomDirection.East;
+            if (x < -TransitionX) return RoomDirection.West;
+            if (y > TransitionY) return RoomDirection.North;
+            if (y < -TransitionY) return RoomDirection.South;
+            return null;
+        }
     }
 
     public static class SpriteSorting
@@ -61,8 +73,12 @@ namespace SoulArcher
         public bool visited;
         public bool cleared;
         public string label;
-        public RoomState(int roomId, StageId roomStage, RoomKind roomKind, string roomLabel)
-        { id = roomId; stage = roomStage; kind = roomKind; label = roomLabel; }
+        public int gridX;
+        public int gridY;
+        public bool offersAbility;
+        public bool elite;
+        public RoomState(int roomId, StageId roomStage, RoomKind roomKind, string roomLabel, int x = 0, int y = 0, bool grantsAbility = false, bool isElite = false)
+        { id = roomId; stage = roomStage; kind = roomKind; label = roomLabel; gridX = x; gridY = y; offersAbility = grantsAbility; elite = isElite; }
     }
 
     [Serializable]
@@ -77,21 +93,42 @@ namespace SoulArcher
         {
             Stage = stage;
             string name = StageRules.Name(stage);
-            Rooms.Add(new RoomState(0, stage, RoomKind.Combat, name + " 전투 1"));
-            Rooms.Add(new RoomState(1, stage, RoomKind.Combat, name + " 전투 2"));
-            Rooms.Add(new RoomState(2, stage, RoomKind.Combat, name + " 전투 3"));
-            Rooms.Add(new RoomState(3, stage, RoomKind.Shop, name + " 상점"));
-            Rooms.Add(new RoomState(4, stage, RoomKind.Boss, StageRules.BossName(stage)));
+            Rooms.Add(new RoomState(0, stage, RoomKind.Combat, name + " 전투 1", 0, 0, true));
+            Rooms.Add(new RoomState(1, stage, RoomKind.Combat, name + " 강화 전투", 1, 0, true, true));
+            Rooms.Add(new RoomState(2, stage, RoomKind.Shop, name + " 상점", 0, 1));
+            Rooms.Add(new RoomState(3, stage, RoomKind.Combat, name + " 전투 3", 1, 1));
+            Rooms.Add(new RoomState(4, stage, RoomKind.Boss, StageRules.BossName(stage), 2, 1));
             Rooms[0].visited = true;
         }
 
         public bool TryMove(int id)
         {
-            if (id < 0 || id >= Rooms.Count || Mathf.Abs(id - CurrentId) > 1) return false;
-            if (Current.kind == RoomKind.Boss && !Current.cleared) return false;
+            if (id < 0 || id >= Rooms.Count || !AreConnected(CurrentId, id)) return false;
+            if ((Current.kind == RoomKind.Combat || Current.kind == RoomKind.Boss) && !Current.cleared) return false;
             CurrentId = id;
             Rooms[id].visited = true;
             return true;
+        }
+        public bool TryMove(RoomDirection direction)
+        {
+            int id = Neighbor(CurrentId, direction);
+            return id >= 0 && TryMove(id);
+        }
+        public int Neighbor(int roomId, RoomDirection direction)
+        {
+            if (roomId < 0 || roomId >= Rooms.Count) return -1;
+            var room = Rooms[roomId];
+            int x = room.gridX + (direction == RoomDirection.East ? 1 : direction == RoomDirection.West ? -1 : 0);
+            int y = room.gridY + (direction == RoomDirection.North ? 1 : direction == RoomDirection.South ? -1 : 0);
+            var neighbor = Rooms.FirstOrDefault(r => r.gridX == x && r.gridY == y);
+            return neighbor == null ? -1 : neighbor.id;
+        }
+        public bool HasNeighbor(int roomId, RoomDirection direction) { return Neighbor(roomId, direction) >= 0; }
+        public bool AreConnected(int firstId, int secondId)
+        {
+            if (firstId < 0 || secondId < 0 || firstId >= Rooms.Count || secondId >= Rooms.Count) return false;
+            var first = Rooms[firstId]; var second = Rooms[secondId];
+            return Mathf.Abs(first.gridX - second.gridX) + Mathf.Abs(first.gridY - second.gridY) == 1;
         }
         public void ClearCurrent() { Current.cleared = true; }
         public int ClearedCombatCount { get { return Rooms.Count(r => r.kind == RoomKind.Combat && r.cleared); } }
@@ -102,25 +139,26 @@ namespace SoulArcher
     public sealed class PlayerStats
     {
         public const float MaxHearts = 5f;
+        public const float BaseAttack = 10f;
+        public const float BaseAttackInterval = .7f;
+        public const float BaseMoveSpeed = 5f;
         public float hearts = MaxHearts;
         public int souls;
-        public float attack = 10f;
-        public float attackInterval = .7f;
-        public float moveSpeed = 5f;
+        public float attack = BaseAttack;
+        public float attackInterval = BaseAttackInterval;
+        public float moveSpeed = BaseMoveSpeed;
         public int pierce;
         public int reflect;
         public int shieldCharges;
+        public bool stageWhetstone;
         public bool dead;
         public float invincibleUntil;
         public readonly int[] abilityStacks = new int[6];
-        public bool CanTakeDamage(float now) { return !dead && now >= invincibleUntil && shieldCharges <= 0; }
+        public bool CanTakeDamage(float now) { return !dead && now >= invincibleUntil; }
         public bool TakeDamage(float amount, float now, float invincibility = .5f)
         {
-            if (!CanTakeDamage(now))
-            {
-                if (shieldCharges > 0) shieldCharges--;
-                return false;
-            }
+            if (!CanTakeDamage(now)) return false;
+            if (shieldCharges > 0) { shieldCharges--; invincibleUntil = now + .2f; return false; }
             hearts = Mathf.Max(0f, hearts - Mathf.Max(.5f, amount));
             invincibleUntil = now + invincibility;
             if (hearts <= 0f) dead = true;
@@ -130,6 +168,16 @@ namespace SoulArcher
         { return TakeDamage(DifficultyRules.Damage(amount, difficulty), now, invincibility); }
         public void Heal(float amount) { hearts = Mathf.Min(MaxHearts, hearts + amount); }
         public int StackCount(Ability ability) { return abilityStacks[(int)ability]; }
+        public void ApplyStageWhetstone() { stageWhetstone = true; RecalculateDerivedStats(); }
+        public void ResetStageEffects() { stageWhetstone = false; RecalculateDerivedStats(); }
+        public void RecalculateDerivedStats()
+        {
+            attack = BaseAttack * (1f + .2f * StackCount(Ability.Attack)) * (stageWhetstone ? 1.2f : 1f);
+            attackInterval = Mathf.Max(BaseAttackInterval * .5f, BaseAttackInterval * (1f - .15f * StackCount(Ability.Speed)));
+            moveSpeed = BaseMoveSpeed * (1f + .1f * StackCount(Ability.Move));
+            pierce = StackCount(Ability.Pierce);
+            reflect = StackCount(Ability.Reflect);
+        }
     }
 
     public static class DifficultyRules
@@ -158,7 +206,7 @@ namespace SoulArcher
             stats.souls -= Prices[itemIndex]; purchased[itemIndex] = true;
             if (itemIndex == 0) stats.Heal(1.5f);
             else if (itemIndex == 1) stats.shieldCharges++;
-            else stats.attack *= 1.2f;
+            else stats.ApplyStageWhetstone();
             return true;
         }
     }
@@ -174,13 +222,9 @@ namespace SoulArcher
             stats.abilityStacks[(int)ability]++;
             switch (ability)
             {
-                case Ability.Attack: stats.attack *= 1.2f; break;
-                case Ability.Speed: stats.attackInterval = Mathf.Max(.2f, stats.attackInterval * .85f); break;
-                case Ability.Pierce: stats.pierce++; break;
-                case Ability.Reflect: stats.reflect++; break;
                 case Ability.Heal: stats.Heal(1.5f); break;
-                case Ability.Move: stats.moveSpeed *= 1.15f; break;
             }
+            stats.RecalculateDerivedStats();
         }
         public static List<Ability> CreateCards(PlayerStats stats, int seed)
         {
@@ -230,6 +274,7 @@ namespace SoulArcher
         public float remainingHearts;
         public int souls;
         public string abilities;
+        public string dateIso;
     }
 
     [Serializable]
@@ -260,7 +305,9 @@ namespace SoulArcher
         {
             var counts = new Dictionary<string, int>();
             foreach (var record in Load().records) foreach (string name in (record.abilities ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) counts[name] = counts.ContainsKey(name) ? counts[name] + 1 : 1;
-            return counts.Count == 0 ? "없음" : counts.OrderByDescending(p => p.Value).First().Key;
+            if (counts.Count == 0) return "없음";
+            var favorite = counts.OrderByDescending(p => p.Value).ThenBy(p => p.Key).First();
+            return favorite.Key + " (" + favorite.Value + "회)";
         }
     }
 
@@ -268,7 +315,9 @@ namespace SoulArcher
     {
         public const int InternalWidth = 640; public const int InternalHeight = 360;
         public const int DefaultOutputWidth = 1920; public const int DefaultOutputHeight = 1080;
+        public const int WindowedWidth = 1280; public const int WindowedHeight = 720;
         public const FullScreenMode DefaultFullscreenMode = FullScreenMode.FullScreenWindow;
         public static void ApplyDefaultOutput() { Screen.SetResolution(DefaultOutputWidth, DefaultOutputHeight, DefaultFullscreenMode); }
+        public static void Apply(bool fullscreen) { Screen.SetResolution(fullscreen ? DefaultOutputWidth : WindowedWidth, fullscreen ? DefaultOutputHeight : WindowedHeight, fullscreen ? DefaultFullscreenMode : FullScreenMode.Windowed); }
     }
 }
