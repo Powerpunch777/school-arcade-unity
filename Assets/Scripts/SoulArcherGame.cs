@@ -19,6 +19,11 @@ namespace SoulArcher
         private PlayerStats stats;
         private Camera cam;
         private AudioSource music;
+        private GameHudView hud;
+        private GameOverlayView overlay;
+        private GameFeelService gameFeel;
+        private ResponsiveCamera2D responsiveCamera;
+        private float e2eScreenshotTimer = 0f;
         private float nextShot;
         private float hitFlash;
         private float runSeconds;
@@ -47,6 +52,9 @@ namespace SoulArcher
         public ScreenState CurrentScreen { get { return screen; } }
         public Difficulty CurrentDifficulty { get { return difficulty; } }
         public int AbilityChoices { get { return abilityChoices; } }
+        public GameHudView GameplayHud { get { return hud; } }
+        public GameOverlayView GameplayOverlay { get { return overlay; } }
+        internal GameFeelService GameFeel { get { return gameFeel; } }
         public bool IsShopItemPurchased(int itemIndex) { return bought != null && itemIndex >= 0 && itemIndex < bought.Length && bought[itemIndex]; }
         public bool TryPurchaseShopItem(int itemIndex)
         {
@@ -69,18 +77,65 @@ namespace SoulArcher
             cam.orthographic = true;
             cam.orthographicSize = 5.2f;
             cam.backgroundColor = new Color(.04f, .06f, .1f);
+            cam.allowHDR = false;
+            cam.allowMSAA = false;
+            responsiveCamera = cam.GetComponent<ResponsiveCamera2D>();
+            if (responsiveCamera == null) responsiveCamera = cam.gameObject.AddComponent<ResponsiveCamera2D>();
+            responsiveCamera.Initialize(cam);
             music = GetComponent<AudioSource>();
             if (music == null) music = gameObject.AddComponent<AudioSource>();
             music.loop = true;
             LoadSettings();
             ResetRunState();
-            if (Application.isPlaying) PlayMusic("Audio/bgm_title");
+            if (Application.isPlaying)
+            {
+                gameFeel = GetComponent<GameFeelService>();
+                if (gameFeel == null) gameFeel = gameObject.AddComponent<GameFeelService>();
+                gameFeel.Initialize(cam);
+                hud = GetComponent<GameHudView>();
+                if (hud == null) hud = gameObject.AddComponent<GameHudView>();
+                hud.Initialize();
+                overlay = GetComponent<GameOverlayView>();
+                if (overlay == null) overlay = gameObject.AddComponent<GameOverlayView>();
+                overlay.Initialize(ExecuteOverlayCommand);
+            }
+            if (Application.isPlaying)
+            {
+                if (HasCommandLineArgument("-e2eForestBoss")) BeginRun(Difficulty.Normal);
+                else if (HasCommandLineArgument("-e2eForest")) BeginRun(Difficulty.Normal);
+                else PlayMusic("Audio/bgm_title");
+            }
             // Direct Start() calls from EditMode fixtures begin a deterministic room for model/integration tests.
-            if (!Application.isPlaying) BeginRun(Difficulty.Normal);
+            else BeginRun(Difficulty.Normal);
+        }
+
+        private static bool HasCommandLineArgument(string expected)
+        {
+            return Environment.GetCommandLineArgs().Any(argument => string.Equals(argument, expected, StringComparison.OrdinalIgnoreCase));
+        }
+        private bool? e2eForestBossModeOverride;
+        public bool IsE2EForestBossMode 
+        { 
+            get { return e2eForestBossModeOverride ?? HasCommandLineArgument("-e2eForestBoss"); }
+            set { e2eForestBossModeOverride = value; }
         }
 
         private void Update()
         {
+            if (IsE2EForestBossMode)
+            {
+                e2eScreenshotTimer += Time.deltaTime;
+                if (e2eScreenshotTimer >= 2.0f)
+                {
+                    e2eScreenshotTimer = -9999f;
+                    string targetPath = Application.isEditor ? 
+                        System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "../Documentation/QA/CMP-232-e2eForestBoss.png")) :
+                        System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.dataPath, "../../../Documentation/QA/CMP-232-e2eForestBoss.png"));
+                    UnityEngine.ScreenCapture.CaptureScreenshot(targetPath);
+                    StartCoroutine(QuitAfterDelay());
+                }
+            }
+
             if (screen == ScreenState.Title) { HandleTitleInput(); return; }
             if (screen == ScreenState.Difficulty) { HandleDifficultyInput(); return; }
             if (screen == ScreenState.Intro || screen == ScreenState.Ending) { HandleCutsceneInput(); return; }
@@ -114,7 +169,35 @@ namespace SoulArcher
             }
             var exitDirection = RoomExitRules.ExitDirection(player.transform.position.x, player.transform.position.y);
             if (exitDirection.HasValue && (enemies.Count == 0 || graph.Current.cleared)) ChangeRoom(exitDirection.Value);
-            if (cam != null) cam.transform.position = new Vector3(0f, 0f, -10f);
+        }
+
+        private System.Collections.IEnumerator QuitAfterDelay()
+        {
+            yield return new WaitForSecondsRealtime(0.5f);
+            Application.Quit(0);
+        }
+
+        private void LateUpdate()
+        {
+            if (hud != null)
+            {
+                hud.Refresh(stats, graph, selectedAbilities, abilityChoices, enemies, currentTarget, banner, screen, cam);
+                var canvasTrans = hud.transform.Find("Gameplay HUD Canvas");
+                if (canvasTrans != null)
+                {
+                    var abilityTextTrans = canvasTrans.Find("Safe Area/Ability Build/Ability Text");
+                    if (abilityTextTrans != null)
+                    {
+                        var textComp = abilityTextTrans.GetComponent<UnityEngine.UI.Text>();
+                        if (textComp != null)
+                        {
+                            textComp.text = "능력 " + Mathf.Clamp(abilityChoices, 0, AbilityRules.ChoicesPerRun) + "/" + AbilityRules.ChoicesPerRun;
+                        }
+                    }
+                }
+            }
+            if (overlay != null)
+                overlay.Refresh(screen, stats, cards, bought, graph);
         }
 
         private void HandleTitleInput()
@@ -173,23 +256,58 @@ namespace SoulArcher
         {
             if (screen == ScreenState.Pause)
             {
-                if (Input.GetKeyDown(KeyCode.Escape)) screen = ScreenState.Play;
-                else if (Input.GetKeyDown(KeyCode.R)) BeginRun(difficulty);
-                else if (Input.GetKeyDown(KeyCode.T)) screen = ScreenState.Title;
+                if (Input.GetKeyDown(KeyCode.Escape)) ExecuteOverlayCommand(GameOverlayCommand.Resume, -1);
+                else if (Input.GetKeyDown(KeyCode.R)) ExecuteOverlayCommand(GameOverlayCommand.Restart, -1);
+                else if (Input.GetKeyDown(KeyCode.T)) ExecuteOverlayCommand(GameOverlayCommand.Title, -1);
                 return;
             }
             if (screen == ScreenState.Ability)
             {
                 int choice = ChoiceKey();
-                if (choice >= 0) SelectAbility(choice);
+                if (choice >= 0) ExecuteOverlayCommand(GameOverlayCommand.Select, choice);
                 return;
             }
             int shopChoice = ChoiceKey();
-            if (shopChoice >= 0) TryPurchaseShopItem(shopChoice);
+            if (shopChoice >= 0) ExecuteOverlayCommand(GameOverlayCommand.Select, shopChoice);
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+                ExecuteOverlayCommand(GameOverlayCommand.LeaveShop, -1);
+        }
+
+        public static bool IsCanvasOverlayScreen(ScreenState value)
+        {
+            return value == ScreenState.Ability || value == ScreenState.Shop || value == ScreenState.Pause;
+        }
+
+        public void ExecuteOverlayCommand(GameOverlayCommand command, int index)
+        {
+            if (screen == ScreenState.Ability && command == GameOverlayCommand.Select)
             {
-                graph.ClearCurrent(); screen = ScreenState.Play; banner = "상점 방을 나왔다";
+                SelectAbility(index);
+                return;
             }
+            if (screen == ScreenState.Shop)
+            {
+                if (command == GameOverlayCommand.Select) TryPurchaseShopItem(index);
+                else if (command == GameOverlayCommand.LeaveShop) LeaveShop();
+                return;
+            }
+            if (screen != ScreenState.Pause) return;
+            if (command == GameOverlayCommand.Resume) screen = ScreenState.Play;
+            else if (command == GameOverlayCommand.Restart) BeginRun(difficulty);
+            else if (command == GameOverlayCommand.Title) screen = ScreenState.Title;
+            else if (command == GameOverlayCommand.Settings)
+            {
+                settingsReturnScreen = ScreenState.Pause;
+                screen = ScreenState.Settings;
+            }
+        }
+
+        private void LeaveShop()
+        {
+            if (screen != ScreenState.Shop || graph == null) return;
+            graph.ClearCurrent();
+            screen = ScreenState.Play;
+            banner = "상점 방을 나왔다";
         }
         private int ChoiceKey()
         {
@@ -222,6 +340,10 @@ namespace SoulArcher
             ResetRunState();
             screen = ScreenState.Play;
             graph = new RoomGraph(StageId.Forest);
+            if (IsE2EForestBossMode)
+            {
+                graph.ForceRoomId(4);
+            }
             BuildPlayer();
             LoadRoom();
             PlayMusic("Audio/bgm_forest");
@@ -259,7 +381,7 @@ namespace SoulArcher
 
         private void BuildPlayer()
         {
-            var go = MakeActor("Leon", new Color(.95f, .75f, .32f), Vector3.zero, 1f, SpriteSorting.Actor, "Art/Player/Leon/leon_walk");
+            var go = MakeActor("Leon", new Color(.95f, .75f, .32f), Vector3.zero, 1f, SpriteSorting.Actor, "Art/Player/Leon/leon_idle_south");
             player = go.AddComponent<PlayerActor>();
             player.Initialize(this, stats);
         }
@@ -297,13 +419,7 @@ namespace SoulArcher
         private static EnemyType BossType(StageId stage) { return stage == StageId.Forest ? EnemyType.TreeSpirit : stage == StageId.Cave ? EnemyType.GiantBat : EnemyType.Morkan; }
         private void CreateRoomFloor()
         {
-            Color floorColor = graph.Stage == StageId.Forest ? new Color(.12f, .27f, .16f) : graph.Stage == StageId.Cave ? new Color(.12f, .14f, .23f) : new Color(.25f, .1f, .12f);
-            var floor = MakeActor("" + StageRules.Name(graph.Stage) + " Floor", floorColor, Vector3.zero, 1f, SpriteSorting.Background, graph.Stage == StageId.Forest ? "Art/Environment/Forest/forest_tiles" : graph.Stage == StageId.Cave ? "Art/Environment/Cave/cave_tiles" : "Art/Environment/Castle/castle_tiles");
-            floor.transform.localScale = Vector3.one; var floorRenderer = floor.GetComponent<SpriteRenderer>(); floorRenderer.drawMode = SpriteDrawMode.Tiled; floorRenderer.size = new Vector2(RoomWidth, RoomHeight); roomObjects.Add(floor);
-            AddBoundary("North", new Vector3(0, RoomHeight / 2f, 0), new Vector3(RoomWidth, .3f, 1), RoomDirection.North);
-            AddBoundary("South", new Vector3(0, -RoomHeight / 2f, 0), new Vector3(RoomWidth, .3f, 1), RoomDirection.South);
-            AddBoundary("West", new Vector3(-RoomWidth / 2f, 0, 0), new Vector3(.3f, RoomHeight, 1), RoomDirection.West);
-            AddBoundary("East", new Vector3(RoomWidth / 2f, 0, 0), new Vector3(.3f, RoomHeight, 1), RoomDirection.East);
+            RoomEnvironmentView.Build(transform, graph.Stage, graph, roomObjects);
         }
         private void AddBoundary(string name, Vector3 position, Vector3 scale, RoomDirection direction)
         {
@@ -362,7 +478,13 @@ namespace SoulArcher
         }
         private void TickEnemies() { for (int i = enemies.Count - 1; i >= 0; i--) { if (enemies[i] == null) enemies.RemoveAt(i); else enemies[i].Tick(); } }
         private void TickProjectiles() { for (int i = projectiles.Count - 1; i >= 0; i--) { if (projectiles[i] == null) projectiles.RemoveAt(i); else projectiles[i].Tick(); } }
-        private void UpdateAimTarget() { currentTarget = FindNearestVisibleEnemy(); }
+        private void UpdateAimTarget()
+        {
+            EnemyActor previous = currentTarget;
+            currentTarget = FindNearestVisibleEnemy();
+            if (previous != null && previous != currentTarget) previous.SetTargeted(false);
+            if (currentTarget != null) currentTarget.SetTargeted(true);
+        }
         private EnemyActor FindNearestVisibleEnemy()
         {
             if (player == null || cam == null) return null;
@@ -384,6 +506,7 @@ namespace SoulArcher
             if (!AutoAimRules.CanFire(player.IsMoving, currentTarget != null, Time.time, nextShot)) return;
             var go = MakeActor("Arrow", Color.yellow, player.transform.position, .45f, SpriteSorting.Projectile, "Art/Player/Leon/arrow");
             var arrow = go.AddComponent<ProjectileActor>(); arrow.Initialize(this, player.transform.position, (currentTarget.transform.position - player.transform.position).normalized, false, stats.attack, stats.pierce, stats.reflect); projectiles.Add(arrow); PlayEffect("Audio/sfx_arrow_fire");
+            player.PresentAttack();
             nextShot = Time.time + stats.attackInterval;
         }
         public void SpawnEnemyShot(Vector3 origin, Vector3 direction, float damage)
@@ -391,12 +514,23 @@ namespace SoulArcher
             var go = MakeActor("Enemy Shot", new Color(.85f, .45f, .15f), origin, .3f, SpriteSorting.Projectile); var shot = go.AddComponent<ProjectileActor>(); shot.Initialize(this, origin, direction, true, damage, 0); projectiles.Add(shot);
         }
         public void RemoveEnemy(EnemyActor enemy) { enemies.Remove(enemy); }
-        public void RewardEnemy(EnemyType type) { stats.souls += SoulRewardRules.For(type); PlayEffect("Audio/sfx_enemy_defeat"); }
+        public void RewardEnemy(EnemyType type) { RewardEnemy(type, Vector3.zero); }
+        internal void RewardEnemy(EnemyType type, Vector3 position)
+        {
+            int reward = SoulRewardRules.For(type);
+            stats.souls += reward;
+            PlayEffect("Audio/sfx_enemy_defeat");
+            if (reward > 0) PlayEffect("Audio/sfx_soul_gain");
+            if (gameFeel != null) gameFeel.EnemyDeath(position, ActorVisualProfile.Enemy(type).AccentColor, reward);
+        }
         public void DamagePlayer(float amount)
         {
             if (stats.TakeDamage(amount, Time.time, difficulty))
             {
                 hitFlash = Time.time + .15f; PlayEffect("Audio/sfx_player_hurt");
+                if (player != null) player.PresentHit();
+                if (hud != null) hud.PulseDamage();
+                if (gameFeel != null && player != null) gameFeel.PlayerHit(player.transform.position);
                 if (stats.dead) { resultMessage = "레온이 쓰러졌다"; FinishRun(false); }
             }
         }
@@ -464,12 +598,11 @@ namespace SoulArcher
             if (screen == ScreenState.Controls) { DrawPanel(label, "조작법", "WASD/방향키 이동\n정지 시 화면 안의 가장 가까운 적 자동 공격\n숫자키 또는 마우스로 카드·상점 선택\nSpace/Enter 컷신 진행"); if (GUI.Button(new Rect(245, 285, 150, 32), "뒤로")) screen = ScreenState.Title; return; }
             if (screen == ScreenState.Settings) { DrawSettings(label); return; }
             if (screen == ScreenState.Result) { DrawResult(label); return; }
-            DrawHud(label);
-            if (screen == ScreenState.Ability) DrawAbilityOverlay(label);
-            else if (screen == ScreenState.Shop) DrawShopOverlay(label);
-            else if (screen == ScreenState.Pause) DrawPause(label);
-            else if (screen == ScreenState.StageTransition) { DrawPanel(label, "다음 스테이지", StageRules.Name(StageRules.Next(graph.Stage)) + "으로 이동합니다\nSpace/Enter 계속"); if (GUI.Button(new Rect(245, 250, 150, 34), "계속")) ContinueStage(); }
-            if (hitFlash > Time.time) { GUI.color = new Color(1, .25f, .25f, .5f); GUI.DrawTexture(new Rect(0, 0, 640, 360), Texture2D.whiteTexture); GUI.color = Color.white; }
+            bool useCanvasHud = hud != null && Application.isPlaying;
+            if (!useCanvasHud) DrawHud(label);
+            if (IsCanvasOverlayScreen(screen) && overlay != null && Application.isPlaying) return;
+            if (screen == ScreenState.StageTransition) { DrawPanel(label, "다음 스테이지", StageRules.Name(StageRules.Next(graph.Stage)) + "으로 이동합니다\nSpace/Enter 계속"); if (GUI.Button(new Rect(245, 250, 150, 34), "계속")) ContinueStage(); }
+            if (!useCanvasHud && hitFlash > Time.time) { GUI.color = new Color(1, .25f, .25f, .5f); GUI.DrawTexture(new Rect(0, 0, 640, 360), Texture2D.whiteTexture); GUI.color = Color.white; }
         }
         private void DrawTitle(GUIStyle label)
         {
@@ -542,31 +675,6 @@ namespace SoulArcher
                 GUI.color = new Color(.12f, .12f, .12f); GUI.DrawTexture(new Rect(x - 18, y - 3, 36, 5), Texture2D.whiteTexture); GUI.color = new Color(.35f, .9f, .35f); GUI.DrawTexture(new Rect(x - 17, y - 2, 34 * Mathf.Clamp01(enemy.Health / enemy.MaxHealth), 3), Texture2D.whiteTexture); GUI.color = Color.white;
             }
         }
-        private void DrawAbilityOverlay(GUIStyle label)
-        {
-            DrawOverlayBackground(); var abilityTexture = Resources.Load<Texture2D>("Art/UI/ability_icons"); if (abilityTexture != null) GUI.DrawTexture(new Rect(25, 105, 590, 35), abilityTexture, ScaleMode.ScaleToFit); GUI.Label(new Rect(180, 62, 300, 28), "능력 하나를 선택하세요 [1] [2] [3]", new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontSize = 18 });
-            for (int i = 0; i < cards.Count; i++) if (GUI.Button(new Rect(35 + i * 195, 145, 180, 115), "[" + (i + 1) + "]\n" + AbilityName(cards[i]) + "\n현재 " + stats.StackCount(cards[i]) + "/3중첩\n" + AbilityEffectText(cards[i]))) SelectAbility(i);
-        }
-        private void DrawShopOverlay(GUIStyle label)
-        {
-            DrawOverlayBackground(); GUI.Label(new Rect(180, 62, 300, 28), StageRules.Name(graph.Stage) + " 상점 · 영혼 " + stats.souls, new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontSize = 18 });
-            string[] names = { "회복 하트  (10)", "보호 부적  (15)", "강화 숫돌  (20)" };
-            for (int i = 0; i < 3; i++)
-            {
-                GUI.enabled = !bought[i] && stats.souls >= ShopRules.Prices[i];
-                if (GUI.Button(new Rect(55 + i * 180, 125, 160, 125), "[" + (i + 1) + "]\n" + (bought[i] ? "판매 완료" : names[i]))) TryPurchaseShopItem(i);
-                GUI.enabled = true;
-            }
-            if (GUI.Button(new Rect(245, 275, 150, 32), "상점 나가기")) { graph.ClearCurrent(); screen = ScreenState.Play; banner = "상점 방을 나왔다"; }
-        }
-        private void DrawPause(GUIStyle label)
-        {
-            DrawPanel(label, "일시정지", "");
-            if (GUI.Button(new Rect(235, 130, 170, 34), "계속하기")) screen = ScreenState.Play;
-            if (GUI.Button(new Rect(235, 174, 170, 34), "다시 시작")) BeginRun(difficulty);
-            if (GUI.Button(new Rect(235, 218, 170, 34), "타이틀로")) screen = ScreenState.Title;
-            if (GUI.Button(new Rect(235, 262, 170, 34), "설정")) { settingsReturnScreen = ScreenState.Pause; screen = ScreenState.Settings; }
-        }
         private void DrawResult(GUIStyle label)
         {
             string abilities = selectedAbilities.Count == 0 ? "없음" : string.Join(", ", selectedAbilities.Select(AbilityName).ToArray());
@@ -605,66 +713,192 @@ namespace SoulArcher
         private void DrawPanel(GUIStyle label, string title, string body) { DrawOverlayBackground(); GUI.Label(new Rect(80, 65, 480, 40), title, new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontSize = 24, normal = { textColor = new Color(1f, .82f, .3f) } }); GUI.Label(new Rect(100, 130, 440, 150), body, new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontSize = 17 }); }
         private static void DrawOverlayBackground() { GUI.color = new Color(0, 0, 0, .86f); GUI.DrawTexture(new Rect(0, 0, 640, 360), Texture2D.whiteTexture); GUI.color = Color.white; }
         private void DrawCutscene(GUIStyle label, string text, string title) { DrawOverlayBackground(); string path = screen == ScreenState.Intro ? "Art/Illustrations/intro_0" + (introIndex + 1) + "_" + (introIndex == 0 ? "meeting" : introIndex == 1 ? "abduction" : "departure") : endingIndex == 0 ? "Art/Illustrations/ending_01_rescue" : "Art/Illustrations/ending_02_return"; var texture = Resources.Load<Texture2D>(path); if (texture != null) GUI.DrawTexture(new Rect(0, 0, 640, 280), texture, ScaleMode.StretchToFill); GUI.Label(new Rect(70, 38, 500, 30), title + "  " + ((screen == ScreenState.Intro ? introIndex : endingIndex) + 1) + "/" + (screen == ScreenState.Intro ? 3 : 2), new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontSize = 18 }); GUI.Label(new Rect(30, 275, 580, 35), text, new GUIStyle(label) { alignment = TextAnchor.MiddleCenter, fontSize = 18 }); if (GUI.Button(new Rect(245, 318, 150, 32), "다음")) { if (screen == ScreenState.Intro) { introIndex++; if (introIndex >= 3) BeginRun(difficulty); } else { endingIndex++; if (endingIndex >= 2) FinishRun(true); } } }
-        private static string AbilityEffectText(Ability ability) { switch (ability) { case Ability.Attack: return "공격력 +20%"; case Ability.Speed: return "공격 간격 -15%"; case Ability.Pierce: return "적 1명 추가 관통"; case Ability.Reflect: return "벽 1회 추가 반사"; case Ability.Heal: return "하트 1.5 회복"; default: return "이동 속도 +10%"; } }
         private static string FormatTime(float seconds) { int total = Mathf.Max(0, Mathf.RoundToInt(seconds)); return (total / 60).ToString("00") + ":" + (total % 60).ToString("00"); }
         private static string AbilityName(Ability ability) { switch (ability) { case Ability.Attack: return "공격"; case Ability.Speed: return "공격 속도"; case Ability.Pierce: return "관통"; case Ability.Reflect: return "반사"; case Ability.Heal: return "회복"; default: return "이동 속도"; } }
     }
 
     public sealed class PlayerActor : MonoBehaviour
     {
-        private SoulArcherGame game; private PlayerStats stats; private SpriteRenderer spriteRenderer; private Sprite[] walkFrames; private int directionColumn;
+        private SoulArcherGame game;
+        private PlayerStats stats;
+        private ActorView view;
+        private Vector2 facing = Vector2.down;
         public bool IsMoving { get; private set; }
+
         public void Initialize(SoulArcherGame owner, PlayerStats playerStats)
         {
-            game = owner; stats = playerStats; spriteRenderer = GetComponent<SpriteRenderer>();
-            var texture = Resources.Load<Texture2D>("Art/Player/Leon/leon_walk");
-            if (texture != null) { texture.filterMode = FilterMode.Point; walkFrames = new Sprite[16]; for (int i = 0; i < walkFrames.Length; i++) walkFrames[i] = Sprite.Create(texture, new Rect(i * 32, 0, 32, 32), Vector2.one * .5f, 32f, 0, SpriteMeshType.FullRect); }
+            game = owner;
+            stats = playerStats;
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            view = GetComponent<ActorView>();
+            if (view == null) view = gameObject.AddComponent<ActorView>();
+            view.Initialize(
+                renderer,
+                "Art/Player/Leon/leon_idle",
+                new SpriteSheetLayout(64, 64, 1, 8, 64f),
+                "Art/Player/Leon/leon_walk",
+                new SpriteSheetLayout(66, 66, 6, 8, 66f),
+                ActorVisualProfile.Player(),
+                false);
         }
+
         public void Tick()
         {
             Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
             IsMoving = input.sqrMagnitude > .001f;
-            if (IsMoving) directionColumn = DirectionColumn(input);
-            if (spriteRenderer != null && walkFrames != null) spriteRenderer.sprite = walkFrames[Mathf.Clamp(directionColumn + (IsMoving ? Mathf.FloorToInt(Time.time * 7f) % 2 : 0), 0, walkFrames.Length - 1)];
+            if (IsMoving) facing = input;
+            if (view != null) view.Tick(facing, IsMoving, Time.time);
             transform.position += (Vector3)(input * stats.moveSpeed * Time.deltaTime);
-            transform.position = new Vector3(Mathf.Clamp(transform.position.x, RoomExitRules.PlayerMinX, RoomExitRules.PlayerMaxX), Mathf.Clamp(transform.position.y, RoomExitRules.PlayerMinY, RoomExitRules.PlayerMaxY), 0);
-            if (!IsMoving) game.FireArrow();
+            float minX = RoomExitRules.PlayerMinX;
+            float maxX = RoomExitRules.PlayerMaxX;
+            float minY = RoomExitRules.PlayerMinY;
+            float maxY = RoomExitRules.PlayerMaxY;
+            if (game.CurrentGraph != null && game.CurrentGraph.Current != null && game.CurrentGraph.Current.kind == RoomKind.Boss && game.CurrentGraph.Stage == StageId.Forest)
+            {
+                minX = -7.5f;
+                maxX = 7.5f;
+                minY = -2.5f;
+                maxY = 2.0f;
+            }
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x, minX, maxX), Mathf.Clamp(transform.position.y, minY, maxY), 0);
+            if (!IsMoving && !game.IsE2EForestBossMode) game.FireArrow();
         }
-        private static int DirectionColumn(Vector2 direction)
-        {
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            if (angle >= -22.5f && angle < 22.5f) return 4;
-            if (angle >= 22.5f && angle < 67.5f) return 6;
-            if (angle >= 67.5f && angle < 112.5f) return 8;
-            if (angle >= 112.5f && angle < 157.5f) return 10;
-            if (angle >= 157.5f || angle < -157.5f) return 12;
-            if (angle >= -157.5f && angle < -112.5f) return 14;
-            if (angle >= -112.5f && angle < -67.5f) return 0;
-            return 2;
-        }
+
+        public void PresentAttack() { if (view != null) view.PlayAttack(); }
+        public void PresentHit() { if (view != null) view.PlayHit(stats == null ? 0f : stats.hearts / PlayerStats.MaxHearts); }
     }
 
     public sealed class EnemyActor : MonoBehaviour
     {
-        private SoulArcherGame game; private PlayerActor player; private EnemyType type; private float health; private float maxHealth; private float nextAction; private float phaseTimer; private SpriteRenderer spriteRenderer; private Sprite[] animationFrames;
+        private SoulArcherGame game;
+        private PlayerActor player;
+        private EnemyType type;
+        private float health;
+        private float maxHealth;
+        private float nextAction;
+        private float phaseTimer;
+        private ActorView view;
+        private ActorVisualProfile visualProfile;
         public bool Dead { get; private set; }
         public EnemyType Type { get { return type; } }
         public float Health { get { return health; } }
         public float MaxHealth { get { return maxHealth; } }
         public float LastDamagedAt { get; private set; }
         public int BossPhase { get { return type == EnemyType.Morkan && health <= maxHealth * .5f ? 2 : 1; } }
+        private readonly List<GameObject> warningLines = new List<GameObject>();
+        private Vector2 attackDirection;
+        private bool hasLockedDirection;
+
+        private void ClearWarningLines()
+        {
+            if (warningLines != null)
+            {
+                foreach (var line in warningLines)
+                {
+                    if (line != null) Destroy(line);
+                }
+                warningLines.Clear();
+            }
+        }
+
+        private void ShowWarningLines(Vector2 direction, float range, bool triple)
+        {
+            float dist = Mathf.Min(range, Vector2.Distance(transform.position, player.transform.position));
+            int neededLines = triple ? 3 : 1;
+            while (warningLines.Count < neededLines)
+            {
+                var line = new GameObject("BossWarningLine");
+                var sr = line.AddComponent<SpriteRenderer>();
+                sr.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f, 1f);
+                sr.color = new Color(1f, 0.15f, 0.1f, 0.45f);
+                sr.sortingOrder = SpriteSorting.Projectile - 1;
+                warningLines.Add(line);
+            }
+            while (warningLines.Count > neededLines)
+            {
+                var line = warningLines[warningLines.Count - 1];
+                if (line != null) Destroy(line);
+                warningLines.RemoveAt(warningLines.Count - 1);
+            }
+            
+            float alpha = 0.45f + Mathf.PingPong(Time.unscaledTime * 5f, 0.25f);
+            foreach (var l in warningLines)
+            {
+                if (l != null)
+                {
+                    var sr = l.GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                    {
+                        float orangeG = 0.1f + Mathf.PingPong(Time.unscaledTime * 8f, 0.2f);
+                        sr.color = new Color(1f, orangeG, 0.05f, alpha);
+                    }
+                }
+            }
+
+            if (triple)
+            {
+                Vector2 dir0 = direction;
+                Vector2 dir1 = Quaternion.Euler(0, 0, 30) * direction;
+                Vector2 dir2 = Quaternion.Euler(0, 0, -30) * direction;
+                SetLinePosition(warningLines[0], dir0, dist);
+                SetLinePosition(warningLines[1], dir1, dist);
+                SetLinePosition(warningLines[2], dir2, dist);
+            }
+            else
+            {
+                SetLinePosition(warningLines[0], direction, dist);
+            }
+        }
+
+        private void SetLinePosition(GameObject line, Vector2 dir, float length)
+        {
+            if (line == null) return;
+            Vector3 start = transform.position;
+            Vector3 end = start + (Vector3)(dir * length);
+            line.transform.position = (start + end) * 0.5f;
+            line.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+            
+            float progress = 0.5f;
+            if (phaseTimer >= 3.5f && phaseTimer < 4.0f)
+            {
+                progress = (phaseTimer - 3.5f) / 0.5f;
+            }
+            else
+            {
+                float timeToAttack = nextAction - Time.time;
+                if (timeToAttack > 0f && timeToAttack <= 0.5f)
+                {
+                    progress = (0.5f - timeToAttack) / 0.5f;
+                }
+            }
+            
+            float widthPulse = Mathf.Lerp(0.18f, 0.55f, progress) + Mathf.PingPong(Time.unscaledTime * 6f, 0.1f);
+            line.transform.localScale = new Vector3(length, widthPulse, 1f);
+        }
+
+        private void OnDestroy()
+        {
+            ClearWarningLines();
+        }
+
         public void Initialize(SoulArcherGame owner, PlayerActor target, EnemyType enemyType)
         {
             game = owner; player = target; type = enemyType;
             maxHealth = type == EnemyType.TreeSpirit ? 160f : type == EnemyType.GiantBat ? 190f : type == EnemyType.Morkan ? 260f : 35f;
             health = maxHealth;
-            spriteRenderer = GetComponent<SpriteRenderer>(); var texture = spriteRenderer != null && spriteRenderer.sprite != null ? spriteRenderer.sprite.texture : null; int cell = maxHealth >= 100f ? 64 : 32;
-            if (texture != null && texture.width >= cell) { int count = Mathf.Max(1, texture.width / cell); animationFrames = new Sprite[count]; for (int i = 0; i < count; i++) animationFrames[i] = Sprite.Create(texture, new Rect(i * cell, 0, cell, cell), Vector2.one * .5f, cell, 0, SpriteMeshType.FullRect); }
+            int cell = maxHealth >= 100f ? 64 : 32;
+            string resourcePath = ResourcePath(type);
+            Texture2D texture = Resources.Load<Texture2D>(resourcePath);
+            int frameCount = texture == null ? 1 : Mathf.Max(1, texture.width / cell);
+            visualProfile = ActorVisualProfile.Enemy(type);
+            view = GetComponent<ActorView>();
+            if (view == null) view = gameObject.AddComponent<ActorView>();
+            view.Initialize(GetComponent<SpriteRenderer>(), resourcePath, new SpriteSheetLayout(cell, cell, frameCount, 1, cell), visualProfile, maxHealth < 100f);
         }
+
         public void Tick()
         {
             if (Dead || player == null) return;
-            if (spriteRenderer != null && animationFrames != null) spriteRenderer.sprite = animationFrames[Mathf.FloorToInt(Time.time * 4f) % animationFrames.Length];
             float distance = Vector2.Distance(transform.position, player.transform.position); Vector2 direction = (player.transform.position - transform.position).normalized;
             switch (type)
             {
@@ -679,28 +913,141 @@ namespace SoulArcher
                 case EnemyType.Morkan: BossPattern(direction, BossPhase == 2 ? 1.5f : 1f, BossPhase == 2 ? .75f : 1.25f, 10f); break;
             }
             transform.position = ArenaRules.ClampEnemy(transform.position);
+            if (view != null) view.Tick(direction, type != EnemyType.Morkan && type != EnemyType.TreeSpirit, Time.time);
             if (distance < (type == EnemyType.TreeSpirit || type == EnemyType.GiantBat || type == EnemyType.Morkan ? 1.2f : .7f)) game.DamagePlayer(type == EnemyType.TreeSpirit || type == EnemyType.GiantBat || type == EnemyType.Morkan ? 1f : .5f);
         }
-        private void Shoot(Vector2 direction, float damage, float cooldown, float range) { if (Time.time >= nextAction && Vector2.Distance(transform.position, player.transform.position) < range) { game.SpawnEnemyShot(transform.position, direction, damage); nextAction = Time.time + cooldown; } }
-        private void BossPattern(Vector2 direction, float damage, float cooldown, float range) { phaseTimer += Time.deltaTime; Shoot(direction, damage, cooldown, range); if (phaseTimer > 4f) { game.SpawnEnemyShot(transform.position, Quaternion.Euler(0, 0, 30) * direction, damage); game.SpawnEnemyShot(transform.position, Quaternion.Euler(0, 0, -30) * direction, damage); phaseTimer = 0f; } }
+        private void Shoot(Vector2 direction, float damage, float cooldown, float range)
+        {
+            if (Time.time >= nextAction && Vector2.Distance(transform.position, player.transform.position) < range)
+            {
+                game.SpawnEnemyShot(transform.position, direction, damage);
+                if (view != null) view.PlayAttack();
+                nextAction = Time.time + cooldown;
+                game.PlayEffect("Audio/sfx_arrow_fire");
+                hasLockedDirection = false;
+            }
+        }
+        private void BossPattern(Vector2 direction, float damage, float cooldown, float range)
+        {
+            if (game.IsE2EForestBossMode)
+            {
+                phaseTimer = 3.8f;
+            }
+            else
+            {
+                if (player != null && Vector2.Distance(transform.position, player.transform.position) >= range)
+                {
+                    nextAction = Mathf.Max(nextAction, Time.time + 0.5f);
+                }
+                phaseTimer += Time.deltaTime;
+            }
+            bool tripleWarning = phaseTimer >= 3.5f && phaseTimer < 4f;
+            if (tripleWarning)
+            {
+                if (phaseTimer >= 3.5f && phaseTimer < 3.75f)
+                {
+                    attackDirection = direction;
+                    hasLockedDirection = true;
+                }
+                else if (!hasLockedDirection)
+                {
+                    attackDirection = direction;
+                    hasLockedDirection = true;
+                }
+                
+                if (view != null && !view.IsWarning)
+                {
+                    view.IsWarning = true;
+                    game.PlayEffect("Audio/sfx_boss_warning");
+                }
+                if (view != null) view.IsWarning = true;
+                ShowWarningLines(attackDirection, range, true);
+            }
+            else
+            {
+                float timeToAttack = nextAction - Time.time;
+                bool normalWarning = timeToAttack <= 0.5f && timeToAttack > 0f && Vector2.Distance(transform.position, player.transform.position) < range;
+                if (normalWarning)
+                {
+                    if (timeToAttack > 0.25f)
+                    {
+                        attackDirection = direction;
+                        hasLockedDirection = true;
+                    }
+                    else if (!hasLockedDirection)
+                    {
+                        attackDirection = direction;
+                        hasLockedDirection = true;
+                    }
+                    
+                    if (view != null) view.IsWarning = true;
+                    ShowWarningLines(attackDirection, range, false);
+                }
+                else
+                {
+                    if (view != null) view.IsWarning = false;
+                    ClearWarningLines();
+                    hasLockedDirection = false;
+                }
+            }
+            if (phaseTimer < 3.5f)
+            {
+                Shoot(hasLockedDirection ? attackDirection : direction, damage, cooldown, range);
+            }
+            if (phaseTimer >= 4f)
+            {
+                if (Vector2.Distance(transform.position, player.transform.position) < range)
+                {
+                    Vector2 finalDir = hasLockedDirection ? attackDirection : direction;
+                    game.SpawnEnemyShot(transform.position, finalDir, damage);
+                    game.SpawnEnemyShot(transform.position, Quaternion.Euler(0, 0, 30) * finalDir, damage);
+                    game.SpawnEnemyShot(transform.position, Quaternion.Euler(0, 0, -30) * finalDir, damage);
+                    game.PlayEffect("Audio/sfx_arrow_fire");
+                    if (view != null) view.PlayAttack();
+                }
+                phaseTimer = 0f;
+                nextAction = Time.time + cooldown;
+                ClearWarningLines();
+                hasLockedDirection = false;
+            }
+        }
         public void TakeDamage(float amount)
         {
             if (Dead) return;
             if (type == EnemyType.ShieldSkeleton && Time.frameCount % 3 == 0) amount *= .35f;
             LastDamagedAt = Time.time;
             health -= amount;
-            if (health <= 0f) { Dead = true; game.RewardEnemy(type); game.RemoveEnemy(this); if (Application.isPlaying) Destroy(gameObject); else DestroyImmediate(gameObject); }
+            if (view != null) view.PlayHit(health / maxHealth);
+            if (game.GameFeel != null) game.GameFeel.ProjectileImpact(transform.position, visualProfile.AccentColor, maxHealth >= 100f);
+            if (health <= 0f) { Dead = true; game.RewardEnemy(type, transform.position); game.RemoveEnemy(this); if (Application.isPlaying) Destroy(gameObject); else DestroyImmediate(gameObject); }
+        }
+
+        public void SetTargeted(bool targeted) { if (view != null) view.SetTargeted(targeted); }
+
+        private static string ResourcePath(EnemyType enemyType)
+        {
+            if (enemyType == EnemyType.Wolf) return "Art/Enemies/Forest/forest_wolf";
+            if (enemyType == EnemyType.Mushroom) return "Art/Enemies/Forest/poison_mushroom";
+            if (enemyType == EnemyType.RockBeetle) return "Art/Enemies/Cave/rock_beetle";
+            if (enemyType == EnemyType.CrystalSpirit) return "Art/Enemies/Cave/crystal_spirit";
+            if (enemyType == EnemyType.ShieldSkeleton) return "Art/Enemies/Castle/shield_skeleton";
+            if (enemyType == EnemyType.DarkMage) return "Art/Enemies/Castle/dark_mage";
+            if (enemyType == EnemyType.TreeSpirit) return "Art/Bosses/Forest/ancient_tree_spirit";
+            if (enemyType == EnemyType.GiantBat) return "Art/Bosses/Cave/giant_bat";
+            return "Art/Bosses/Castle/morkan_boss";
         }
     }
 
     public sealed class ProjectileActor : MonoBehaviour
     {
         private SoulArcherGame game; private Vector2 direction; private bool hostile; private float damage; private int pierce; private int reflect; private float life;
+        private ProjectileView view;
         private readonly HashSet<EnemyActor> hitEnemies = new HashSet<EnemyActor>();
-        public void Initialize(SoulArcherGame owner, Vector3 origin, Vector2 travel, bool isHostile, float amount, int pierceCount, int reflectCount = 0) { game = owner; transform.position = origin; direction = travel.normalized; hostile = isHostile; damage = amount; pierce = pierceCount; reflect = reflectCount; transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); }
+        public void Initialize(SoulArcherGame owner, Vector3 origin, Vector2 travel, bool isHostile, float amount, int pierceCount, int reflectCount = 0) { game = owner; transform.position = origin; direction = travel.normalized; hostile = isHostile; damage = amount; pierce = pierceCount; reflect = reflectCount; transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg); view = gameObject.AddComponent<ProjectileView>(); view.Initialize(GetComponent<SpriteRenderer>(), hostile); }
         public void Tick()
         {
             life += Time.deltaTime; transform.position += (Vector3)(direction * (hostile ? 3.2f : 9f) * Time.deltaTime);
+            if (view != null) view.Tick();
             if (!hostile && reflect > 0 && (Mathf.Abs(transform.position.x) > 8.7f || Mathf.Abs(transform.position.y) > 4.2f))
             {
                 bool hitX = Mathf.Abs(transform.position.x) > 8.7f;
@@ -709,6 +1056,7 @@ namespace SoulArcher
                 transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
                 transform.position = new Vector3(Mathf.Clamp(transform.position.x, -8.7f, 8.7f), Mathf.Clamp(transform.position.y, -4.2f, 4.2f), transform.position.z);
                 reflect--;
+                if (game.GameFeel != null) game.GameFeel.ProjectileReflect(transform.position);
             }
             if (life > 3f || Mathf.Abs(transform.position.x) > 10f || Mathf.Abs(transform.position.y) > 6f) { Destroy(gameObject); return; }
             if (hostile)

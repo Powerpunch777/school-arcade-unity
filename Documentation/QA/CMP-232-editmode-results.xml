@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="74" result="Passed" total="74" passed="74" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="2.0195586">
+  <test-suite type="TestSuite" id="1000" name="Soul Archer" fullname="Soul Archer" runstate="Runnable" testcasecount="74" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="2.019559" total="74" passed="74" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1023" name="SchoolArcade.PixelLab.Editor.Tests.dll" fullname="C:/Users/young/Documents/Game Design/school-arcade-unity/Library/ScriptAssemblies/SchoolArcade.PixelLab.Editor.Tests.dll" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="1.556544" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="47808" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1024" name="SchoolArcade" fullname="SchoolArcade" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="1.556210" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1025" name="Editor" fullname="SchoolArcade.Editor" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="1.556136" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1026" name="PixelLab" fullname="SchoolArcade.Editor.PixelLab" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="1.556084" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1027" name="Tests" fullname="SchoolArcade.Editor.PixelLab.Tests" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:18Z" duration="1.555991" total="18" passed="18" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1001" name="PixelLabDirectionalCharacterPromoterTests" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabDirectionalCharacterPromoterTests" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabDirectionalCharacterPromoterTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:17Z" duration="1.340476" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1002" name="PromotesEightCenteredDirectionsAndRecordsApproval" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabDirectionalCharacterPromoterTests.PromotesEightCenteredDirectionsAndRecordsApproval" methodname="PromotesEightCenteredDirectionsAndRecordsApproval" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabDirectionalCharacterPromoterTests" runstate="Runnable" seed="1830593813" result="Passed" start-time="2026-07-16 15:08:16Z" end-time="2026-07-16 15:08:17Z" duration="0.727444" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1003" name="PromotesExplicitZipWalkFramesWithLosslessGlobalEvenCrop" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabDirectionalCharacterPromoterTests.PromotesExplicitZipWalkFramesWithLosslessGlobalEvenCrop" methodname="PromotesExplicitZipWalkFramesWithLosslessGlobalEvenCrop" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabDirectionalCharacterPromoterTests" runstate="Runnable" seed="663777158" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:17Z" duration="0.604449" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1004" name="PixelLabImportPolicyTests" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:18Z" duration="0.155563" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1008" name="ConflictingManifestPpuFallsBackConservatively" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests.ConflictingManifestPpuFallsBackConservatively" methodname="ConflictingManifestPpuFallsBackConservatively" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" runstate="Runnable" seed="402169438" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:17Z" duration="0.006939" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1006" name="FileNamePpuMarkerHasHighestPriority" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests.FileNamePpuMarkerHasHighestPriority" methodname="FileNamePpuMarkerHasHighestPriority" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" runstate="Runnable" seed="665929324" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:17Z" duration="0.016511" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1007" name="FileSpecificManifestPpuBeatsGlobalPpu" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests.FileSpecificManifestPpuBeatsGlobalPpu" methodname="FileSpecificManifestPpuBeatsGlobalPpu" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" runstate="Runnable" seed="1686444784" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:17Z" duration="0.014404" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1005" name="GeneratedAndExtractedPngsUseCandidateRuleOnly" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests.GeneratedAndExtractedPngsUseCandidateRuleOnly" methodname="GeneratedAndExtractedPngsUseCandidateRuleOnly" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" runstate="Runnable" seed="1365959496" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:17Z" duration="0.015480" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1009" name="PixelArtSettingsAreAppliedWithoutDestroyingMultipleSpriteMode" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests.PixelArtSettingsAreAppliedWithoutDestroyingMultipleSpriteMode" methodname="PixelArtSettingsAreAppliedWithoutDestroyingMultipleSpriteMode" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabImportPolicyTests" runstate="Runnable" seed="210125716" result="Passed" start-time="2026-07-16 15:08:17Z" end-time="2026-07-16 15:08:18Z" duration="0.100019" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1010" name="PixelLabManifestValidatorTests" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.018552" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1016" name="DuplicateJsonKeysAreRejectedInsteadOfSilentlyOverwritten" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests.DuplicateJsonKeysAreRejectedInsteadOfSilentlyOverwritten" methodname="DuplicateJsonKeysAreRejectedInsteadOfSilentlyOverwritten" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" seed="953357879" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.005466" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1014" name="MissingContractFieldsAreReportedClearly" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests.MissingContractFieldsAreReportedClearly" methodname="MissingContractFieldsAreReportedClearly" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" seed="669071288" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.003371" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1011" name="NestedIdsAndDeclaredFilesAreValidated" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests.NestedIdsAndDeclaredFilesAreValidated" methodname="NestedIdsAndDeclaredFilesAreValidated" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" seed="1568640293" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.005535" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1015" name="RemoteOnlyFileListDoesNotSatisfyLocalArtifactContract" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests.RemoteOnlyFileListDoesNotSatisfyLocalArtifactContract" methodname="RemoteOnlyFileListDoesNotSatisfyLocalArtifactContract" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" seed="1861211907" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000784" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1012" name="SnakeCaseIdsRemainCompatibleWithSchemaChanges" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests.SnakeCaseIdsRemainCompatibleWithSchemaChanges" methodname="SnakeCaseIdsRemainCompatibleWithSchemaChanges" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" seed="1320803021" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.001528" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1013" name="TraversalInDeclaredFileIsAnError" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests.TraversalInDeclaredFileIsAnError" methodname="TraversalInDeclaredFileIsAnError" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabManifestValidatorTests" runstate="Runnable" seed="1206613771" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000657" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1017" name="PixelLabZipExtractorTests" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.040377" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1022" name="DestinationOutsideAssetRootIsRejected" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests.DestinationOutsideAssetRootIsRejected" methodname="DestinationOutsideAssetRootIsRejected" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" runstate="Runnable" seed="28539226" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.003159" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1021" name="ExistingDestinationIsNeverOverwritten" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests.ExistingDestinationIsNeverOverwritten" methodname="ExistingDestinationIsNeverOverwritten" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" runstate="Runnable" seed="1111094573" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.002097" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1020" name="ScriptEntryIsRejectedAsNonInertContent" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests.ScriptEntryIsRejectedAsNonInertContent" methodname="ScriptEntryIsRejectedAsNonInertContent" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" runstate="Runnable" seed="1805414947" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.011582" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1018" name="SupportedNestedFilesExtractInsideFixedDestination" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests.SupportedNestedFilesExtractInsideFixedDestination" methodname="SupportedNestedFilesExtractInsideFixedDestination" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" runstate="Runnable" seed="179454086" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.012325" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1019" name="TraversalEntryIsRejectedBeforeAnyFileIsWritten" fullname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests.TraversalEntryIsRejectedBeforeAnyFileIsWritten" methodname="TraversalEntryIsRejectedBeforeAnyFileIsWritten" classname="SchoolArcade.Editor.PixelLab.Tests.PixelLabZipExtractorTests" runstate="Runnable" seed="1055497146" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.010406" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1088" name="SoulArcher.EditorTests.dll" fullname="C:/Users/young/Documents/Game Design/school-arcade-unity/Library/ScriptAssemblies/SoulArcher.EditorTests.dll" runstate="Runnable" testcasecount="56" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.455962" total="56" passed="56" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="47808" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestFixture" id="1028" name="SoulArcherForestPresentationTests" fullname="SoulArcherForestPresentationTests" classname="SoulArcherForestPresentationTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.077197" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1030" name="ActorViewWarningFlashingIsSupported" fullname="SoulArcherForestPresentationTests.ActorViewWarningFlashingIsSupported" methodname="ActorViewWarningFlashingIsSupported" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="2005819897" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.010395" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1037" name="ForestBossE2EEntryPointDisablesPlayerAutoFire" fullname="SoulArcherForestPresentationTests.ForestBossE2EEntryPointDisablesPlayerAutoFire" methodname="ForestBossE2EEntryPointDisablesPlayerAutoFire" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="501099603" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.009451" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1035" name="ForestBossE2EEntryPointForceRoomId4" fullname="SoulArcherForestPresentationTests.ForestBossE2EEntryPointForceRoomId4" methodname="ForestBossE2EEntryPointForceRoomId4" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="1029100584" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000604" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1036" name="ForestBossE2EEntryPointFreezesPhaseTimerAndShowsWarning" fullname="SoulArcherForestPresentationTests.ForestBossE2EEntryPointFreezesPhaseTimerAndShowsWarning" methodname="ForestBossE2EEntryPointFreezesPhaseTimerAndShowsWarning" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="1628601669" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.003893" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1032" name="ForestBossPatternTriggersCorrectWarningTimings" fullname="SoulArcherForestPresentationTests.ForestBossPatternTriggersCorrectWarningTimings" methodname="ForestBossPatternTriggersCorrectWarningTimings" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="1064111451" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.001077" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1034" name="ForestBossRoomPlayerMovementIsClampedToSafeArea" fullname="SoulArcherForestPresentationTests.ForestBossRoomPlayerMovementIsClampedToSafeArea" methodname="ForestBossRoomPlayerMovementIsClampedToSafeArea" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="500162896" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.001563" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1033" name="ForestBossWarningLineLocksDirectionAndThickens" fullname="SoulArcherForestPresentationTests.ForestBossWarningLineLocksDirectionAndThickens" methodname="ForestBossWarningLineLocksDirectionAndThickens" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="1919345138" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000815" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1031" name="GameHudBuildTextReplacementIsCorrect" fullname="SoulArcherForestPresentationTests.GameHudBuildTextReplacementIsCorrect" methodname="GameHudBuildTextReplacementIsCorrect" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="959202327" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.045870" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1029" name="ResponsiveCameraZoomsInForestBossRoomWithActiveBoss" fullname="SoulArcherForestPresentationTests.ResponsiveCameraZoomsInForestBossRoomWithActiveBoss" methodname="ResponsiveCameraZoomsInForestBossRoomWithActiveBoss" classname="SoulArcherForestPresentationTests" runstate="Runnable" seed="400736448" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.002475" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1038" name="SoulArcherModelsTests" fullname="SoulArcherModelsTests" classname="SoulArcherModelsTests" runstate="Runnable" testcasecount="25" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.232187" total="25" passed="25" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1058" name="AbilityBonusesUseAdditiveDesignValues" fullname="SoulArcherModelsTests.AbilityBonusesUseAdditiveDesignValues" methodname="AbilityBonusesUseAdditiveDesignValues" classname="SoulArcherModelsTests" runstate="Runnable" seed="777956517" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000288" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1057" name="AbilityCardsAreUniqueAndExcludeThreeStackAbilities" fullname="SoulArcherModelsTests.AbilityCardsAreUniqueAndExcludeThreeStackAbilities" methodname="AbilityCardsAreUniqueAndExcludeThreeStackAbilities" classname="SoulArcherModelsTests" runstate="Runnable" seed="1083428127" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.002347" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1041" name="AbilitySelectionChangesStats" fullname="SoulArcherModelsTests.AbilitySelectionChangesStats" methodname="AbilitySelectionChangesStats" classname="SoulArcherModelsTests" runstate="Runnable" seed="479724583" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000128" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1055" name="AllSixRegularEnemiesAndThreeBossesAreDistinct" fullname="SoulArcherModelsTests.AllSixRegularEnemiesAndThreeBossesAreDistinct" methodname="AllSixRegularEnemiesAndThreeBossesAreDistinct" classname="SoulArcherModelsTests" runstate="Runnable" seed="1180824537" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.001242" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1054" name="CampaignHasThreeStagesAndFiveRequiredRoomsEach" fullname="SoulArcherModelsTests.CampaignHasThreeStagesAndFiveRequiredRoomsEach" methodname="CampaignHasThreeStagesAndFiveRequiredRoomsEach" classname="SoulArcherModelsTests" runstate="Runnable" seed="1733622249" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000471" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1039" name="DamageStartsInvincibilityAndDeath" fullname="SoulArcherModelsTests.DamageStartsInvincibilityAndDeath" methodname="DamageStartsInvincibilityAndDeath" classname="SoulArcherModelsTests" runstate="Runnable" seed="967371472" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000204" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1050" name="DisplayDefaultsMatchIntegerScaledFhdDesign" fullname="SoulArcherModelsTests.DisplayDefaultsMatchIntegerScaledFhdDesign" methodname="DisplayDefaultsMatchIntegerScaledFhdDesign" classname="SoulArcherModelsTests" runstate="Runnable" seed="2002631781" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000121" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1056" name="EasyDifficultyReducesDamageButNeverBelowHalfHeart" fullname="SoulArcherModelsTests.EasyDifficultyReducesDamageButNeverBelowHalfHeart" methodname="EasyDifficultyReducesDamageButNeverBelowHalfHeart" classname="SoulArcherModelsTests" runstate="Runnable" seed="1359212727" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000150" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1046" name="EnemiesCannotLeaveTheVisibleArena" fullname="SoulArcherModelsTests.EnemiesCannotLeaveTheVisibleArena" methodname="EnemiesCannotLeaveTheVisibleArena" classname="SoulArcherModelsTests" runstate="Runnable" seed="1565231440" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000167" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1048" name="EnemyRewardsDifferForRegularEnemiesAndBoss" fullname="SoulArcherModelsTests.EnemyRewardsDifferForRegularEnemiesAndBoss" methodname="EnemyRewardsDifferForRegularEnemiesAndBoss" classname="SoulArcherModelsTests" runstate="Runnable" seed="17244387" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000168" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1049" name="ForestCombatRewardsAllowFirstShopPurchase" fullname="SoulArcherModelsTests.ForestCombatRewardsAllowFirstShopPurchase" methodname="ForestCombatRewardsAllowFirstShopPurchase" classname="SoulArcherModelsTests" runstate="Runnable" seed="80098794" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000160" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1062" name="FullCampaignProgressesThroughThreeStagesWithSixAbilityChoices" fullname="SoulArcherModelsTests.FullCampaignProgressesThroughThreeStagesWithSixAbilityChoices" methodname="FullCampaignProgressesThroughThreeStagesWithSixAbilityChoices" classname="SoulArcherModelsTests" runstate="Runnable" seed="219333828" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.206231" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1045" name="MovingPlayerCannotFireNewArrow" fullname="SoulArcherModelsTests.MovingPlayerCannotFireNewArrow" methodname="MovingPlayerCannotFireNewArrow" classname="SoulArcherModelsTests" runstate="Runnable" seed="1016139028" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000156" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1047" name="PlayerCanReachBothRoomExits" fullname="SoulArcherModelsTests.PlayerCanReachBothRoomExits" methodname="PlayerCanReachBothRoomExits" classname="SoulArcherModelsTests" runstate="Runnable" seed="1342773468" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000206" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1042" name="ReflectAbilityTracksIndependentStacks" fullname="SoulArcherModelsTests.ReflectAbilityTracksIndependentStacks" methodname="ReflectAbilityTracksIndependentStacks" classname="SoulArcherModelsTests" runstate="Runnable" seed="473065073" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000148" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1044" name="RestartRunResetsStateAndRemovesSpawnedActors" fullname="SoulArcherModelsTests.RestartRunResetsStateAndRemovesSpawnedActors" methodname="RestartRunResetsStateAndRemovesSpawnedActors" classname="SoulArcherModelsTests" runstate="Runnable" seed="171801454" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.007958" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1061" name="RoomGraphBranchesAndOffersExactlyTwoAbilityRoomsPerStage" fullname="SoulArcherModelsTests.RoomGraphBranchesAndOffersExactlyTwoAbilityRoomsPerStage" methodname="RoomGraphBranchesAndOffersExactlyTwoAbilityRoomsPerStage" classname="SoulArcherModelsTests" runstate="Runnable" seed="938296271" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000543" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1040" name="RoomStateTracksVisitClearAndRevisit" fullname="SoulArcherModelsTests.RoomStateTracksVisitClearAndRevisit" methodname="RoomStateTracksVisitClearAndRevisit" classname="SoulArcherModelsTests" runstate="Runnable" seed="898906259" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000173" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1063" name="RunHistoryKeepsOnlyRecentTwentyNonPersonalRecords" fullname="SoulArcherModelsTests.RunHistoryKeepsOnlyRecentTwentyNonPersonalRecords" methodname="RunHistoryKeepsOnlyRecentTwentyNonPersonalRecords" classname="SoulArcherModelsTests" runstate="Runnable" seed="860706774" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.005925" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1060" name="ShieldDoesNotDisappearDuringInvincibility" fullname="SoulArcherModelsTests.ShieldDoesNotDisappearDuringInvincibility" methodname="ShieldDoesNotDisappearDuringInvincibility" classname="SoulArcherModelsTests" runstate="Runnable" seed="732700922" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000174" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1051" name="ShopPurchaseSpendsSoulsAndAppliesItemOnce" fullname="SoulArcherModelsTests.ShopPurchaseSpendsSoulsAndAppliesItemOnce" methodname="ShopPurchaseSpendsSoulsAndAppliesItemOnce" classname="SoulArcherModelsTests" runstate="Runnable" seed="1506967803" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000136" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1052" name="SortingOrderKeepsActorsAboveRoomAndProjectilesAboveActors" fullname="SoulArcherModelsTests.SortingOrderKeepsActorsAboveRoomAndProjectilesAboveActors" methodname="SortingOrderKeepsActorsAboveRoomAndProjectilesAboveActors" classname="SoulArcherModelsTests" runstate="Runnable" seed="106627885" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000140" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1043" name="SoulsSupportShopEconomy" fullname="SoulArcherModelsTests.SoulsSupportShopEconomy" methodname="SoulsSupportShopEconomy" classname="SoulArcherModelsTests" runstate="Runnable" seed="1518554434" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000082" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1053" name="StoppedPlayerSelectsNearestLivingVisibleEnemy" fullname="SoulArcherModelsTests.StoppedPlayerSelectsNearestLivingVisibleEnemy" methodname="StoppedPlayerSelectsNearestLivingVisibleEnemy" classname="SoulArcherModelsTests" runstate="Runnable" seed="1495830118" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000418" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1059" name="WhetstoneExpiresAtStageBoundaryWithoutRemovingAbilityBonus" fullname="SoulArcherModelsTests.WhetstoneExpiresAtStageBoundaryWithoutRemovingAbilityBonus" methodname="WhetstoneExpiresAtStageBoundaryWithoutRemovingAbilityBonus" classname="SoulArcherModelsTests" runstate="Runnable" seed="1687813889" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000150" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1064" name="SoulArcherOverlayPresentationTests" fullname="SoulArcherOverlayPresentationTests" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.049431" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1065" name="AbilityOverlayUsesThreeApprovedPixelCardsInsideReferenceFrame" fullname="SoulArcherOverlayPresentationTests.AbilityOverlayUsesThreeApprovedPixelCardsInsideReferenceFrame" methodname="AbilityOverlayUsesThreeApprovedPixelCardsInsideReferenceFrame" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" seed="860448243" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.027117" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1070" name="AbilityShopAndPauseNoLongerHaveImguiProductMethods" fullname="SoulArcherOverlayPresentationTests.AbilityShopAndPauseNoLongerHaveImguiProductMethods" methodname="AbilityShopAndPauseNoLongerHaveImguiProductMethods" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" seed="1501393204" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000597" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1069" name="CanvasCommandsUseExistingAbilityShopAndScreenRules" fullname="SoulArcherOverlayPresentationTests.CanvasCommandsUseExistingAbilityShopAndScreenRules" methodname="CanvasCommandsUseExistingAbilityShopAndScreenRules" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" seed="452861309" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000838" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1067" name="PauseOverlayExposesFourCommandsWithoutCardOverlap" fullname="SoulArcherOverlayPresentationTests.PauseOverlayExposesFourCommandsWithoutCardOverlap" methodname="PauseOverlayExposesFourCommandsWithoutCardOverlap" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" seed="1210625200" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.005390" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1068" name="ReferenceLayoutScalesToOneTwoAndThreePixelMultiples" fullname="SoulArcherOverlayPresentationTests.ReferenceLayoutScalesToOneTwoAndThreePixelMultiples" methodname="ReferenceLayoutScalesToOneTwoAndThreePixelMultiples" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" seed="1427252974" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.003653" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1066" name="ShopOverlayDistinguishesAffordableDisabledAndConfirmedCards" fullname="SoulArcherOverlayPresentationTests.ShopOverlayDistinguishesAffordableDisabledAndConfirmedCards" methodname="ShopOverlayDistinguishesAffordableDisabledAndConfirmedCards" classname="SoulArcherOverlayPresentationTests" runstate="Runnable" seed="862513772" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.010443" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+      </test-suite>
+      <test-suite type="TestFixture" id="1071" name="SoulArcherPresentationTests" fullname="SoulArcherPresentationTests" classname="SoulArcherPresentationTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.096574" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-case id="1080" name="AbilityBuildUsesSixBoundedIconSlotsAndCompactCountsAtMaximum" fullname="SoulArcherPresentationTests.AbilityBuildUsesSixBoundedIconSlotsAndCompactCountsAtMaximum" methodname="AbilityBuildUsesSixBoundedIconSlotsAndCompactCountsAtMaximum" classname="SoulArcherPresentationTests" runstate="Runnable" seed="2057562047" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.012613" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1076" name="ActorViewBuildsReplaceableLayeredPresentation" fullname="SoulArcherPresentationTests.ActorViewBuildsReplaceableLayeredPresentation" methodname="ActorViewBuildsReplaceableLayeredPresentation" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1216011220" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000545" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1083" name="BossBarIsConditionalAndCompact" fullname="SoulArcherPresentationTests.BossBarIsConditionalAndCompact" methodname="BossBarIsConditionalAndCompact" classname="SoulArcherPresentationTests" runstate="Runnable" seed="2047850690" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.007119" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1084" name="CastleMorkanBossBarRuntimeEvidenceIsRenderedAtFiftyPercent" fullname="SoulArcherPresentationTests.CastleMorkanBossBarRuntimeEvidenceIsRenderedAtFiftyPercent" methodname="CastleMorkanBossBarRuntimeEvidenceIsRenderedAtFiftyPercent" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1931058982" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.032360" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[DEBUG: Screen size: 640x480, safeArea: (x:0.00, y:0.00, width:640.00, height:480.00)
+DEBUG: Canvas enabled: True, active: True
+DEBUG: safeArea anchorMin: (0.00, 0.00), anchorMax: (1.00, 1.00), sizeDelta: (0.00, 0.00), rect: (x:-320.00, y:-180.00, width:640.00, height:360.00)
+DEBUG: Boss Bar active: True, activeInHierarchy: True, rect: (x:-146.00, y:-18.00, width:292.00, height:18.00), pos: (26.00, -36.00)
+]]></output>
+        </test-case>
+        <test-case id="1082" name="CommonHudRefreshPreservesLayoutAndMinimapStateForForestCaveCastle" fullname="SoulArcherPresentationTests.CommonHudRefreshPreservesLayoutAndMinimapStateForForestCaveCastle" methodname="CommonHudRefreshPreservesLayoutAndMinimapStateForForestCaveCastle" classname="SoulArcherPresentationTests" runstate="Runnable" seed="32249722" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.015362" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1079" name="CompactHudPanelsFitThe640By360ReferenceFrame" fullname="SoulArcherPresentationTests.CompactHudPanelsFitThe640By360ReferenceFrame" methodname="CompactHudPanelsFitThe640By360ReferenceFrame" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1228323357" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.003932" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1072" name="DirectionalFramesPreserveEightDirectionSheetOrder" fullname="SoulArcherPresentationTests.DirectionalFramesPreserveEightDirectionSheetOrder" methodname="DirectionalFramesPreserveEightDirectionSheetOrder" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1777378709" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000246" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1085" name="ForestEnvironmentUsesFullPlateAndActiveGateways" fullname="SoulArcherPresentationTests.ForestEnvironmentUsesFullPlateAndActiveGateways" methodname="ForestEnvironmentUsesFullPlateAndActiveGateways" classname="SoulArcherPresentationTests" runstate="Runnable" seed="612455298" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.002649" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1087" name="ForestPlateFlipIsDeterministicAndCaveCastleRemainTiled" fullname="SoulArcherPresentationTests.ForestPlateFlipIsDeterministicAndCaveCastleRemainTiled" methodname="ForestPlateFlipIsDeterministicAndCaveCastleRemainTiled" classname="SoulArcherPresentationTests" runstate="Runnable" seed="2010399078" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.008504" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1086" name="ForestPlateImporterIsPixelExact" fullname="SoulArcherPresentationTests.ForestPlateImporterIsPixelExact" methodname="ForestPlateImporterIsPixelExact" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1195255189" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.001383" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1078" name="GameplayHudUsesCanvasScalerAtInternalResolution" fullname="SoulArcherPresentationTests.GameplayHudUsesCanvasScalerAtInternalResolution" methodname="GameplayHudUsesCanvasScalerAtInternalResolution" classname="SoulArcherPresentationTests" runstate="Runnable" seed="897370784" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.004559" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1081" name="HudBannerExpiresWithoutRefreshExtensionAndStageTransitionKeepsIt" fullname="SoulArcherPresentationTests.HudBannerExpiresWithoutRefreshExtensionAndStageTransitionKeepsIt" methodname="HudBannerExpiresWithoutRefreshExtensionAndStageTransitionKeepsIt" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1127939056" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.003926" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1077" name="PlayerPresentationSeparatesIdleAndMovingLeonSources" fullname="SoulArcherPresentationTests.PlayerPresentationSeparatesIdleAndMovingLeonSources" methodname="PlayerPresentationSeparatesIdleAndMovingLeonSources" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1058808575" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000578" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1075" name="ProceduralPresentationSpritesAreCachedAndPixelFiltered" fullname="SoulArcherPresentationTests.ProceduralPresentationSpritesAreCachedAndPixelFiltered" methodname="ProceduralPresentationSpritesAreCachedAndPixelFiltered" classname="SoulArcherPresentationTests" runstate="Runnable" seed="125559660" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000617" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1074" name="ResponsiveViewportShowsWholeArenaOnNarrowScreens" fullname="SoulArcherPresentationTests.ResponsiveViewportShowsWholeArenaOnNarrowScreens" methodname="ResponsiveViewportShowsWholeArenaOnNarrowScreens" classname="SoulArcherPresentationTests" runstate="Runnable" seed="677619564" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000099" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+        </test-case>
+        <test-case id="1073" name="SpriteSheetLayoutWrapsAnimationFramesWithinDirection" fullname="SoulArcherPresentationTests.SpriteSheetLayoutWrapsAnimationFramesWithinDirection" methodname="SpriteSheetLayoutWrapsAnimationFramesWithinDirection" classname="SoulArcherPresentationTests" runstate="Runnable" seed="1908255373" result="Passed" start-time="2026-07-16 15:08:18Z" end-time="2026-07-16 15:08:18Z" duration="0.000105" asserts="0">
+          <properties>
+            <property name="retryIteration" value="0" />
+            <property name="repeatIteration" value="0" />
+          </properties>
+          <output><![CDATA[Saving results to: C:\Users\young\Documents\Game Design\school-arcade-unity\Documentation\QA\CMP-232-editmode-results.xml
+]]></output>
+        </test-case>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
