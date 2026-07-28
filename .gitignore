@@ -21,6 +21,18 @@
 Tests/*-results.xml
 Tests/visual-*.png
 
+# Local source-generation archives and QA evidence. The final runtime assets
+# live under Assets/Resources and are the only art files required to run this project.
+/Art/
+/Assets/Art/Generated/
+/Assets/Art/Generated.meta
+/Documentation/ArtSource/
+/Documentation/QA/
+/Tests/
+*.approval.json
+*.approval.json.meta
+/*-results.xml
+
 # OS files
 .DS_Store
 Thumbs.db

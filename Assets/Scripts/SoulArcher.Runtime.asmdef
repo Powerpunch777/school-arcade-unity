@@ -1,7 +1,7 @@
 {
   "name": "SoulArcher.Runtime",
   "rootNamespace": "SoulArcher",
-  "references": [],
+  "references": ["Unity.ugui"],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

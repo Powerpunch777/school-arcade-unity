@@ -8,20 +8,22 @@ namespace SoulArcher
         public readonly Color OutlineColor;
         public readonly Color AccentColor;
         public readonly Vector2 ShadowScale;
+        public readonly Vector2 ShadowOffset;
         public readonly float FramesPerSecond;
 
-        public ActorVisualProfile(Color fallbackColor, Color outlineColor, Color accentColor, Vector2 shadowScale, float framesPerSecond)
+        public ActorVisualProfile(Color fallbackColor, Color outlineColor, Color accentColor, Vector2 shadowScale, Vector2 shadowOffset, float framesPerSecond)
         {
             FallbackColor = fallbackColor;
             OutlineColor = outlineColor;
             AccentColor = accentColor;
             ShadowScale = shadowScale;
+            ShadowOffset = shadowOffset;
             FramesPerSecond = framesPerSecond;
         }
 
         public static ActorVisualProfile Player()
         {
-            return new ActorVisualProfile(new Color(.96f, .74f, .28f), new Color(.08f, .12f, .1f, .95f), new Color(1f, .87f, .34f), new Vector2(.92f, .32f), 8f);
+            return new ActorVisualProfile(new Color(.96f, .74f, .28f), new Color(.08f, .12f, .1f, .95f), new Color(1f, .87f, .34f), new Vector2(.92f, .32f), new Vector2(0f, -.38f), 8f);
         }
 
         public static ActorVisualProfile Enemy(EnemyType type)
@@ -41,7 +43,14 @@ namespace SoulArcher
                 default: fallback = new Color(.9f, .21f, .17f); accent = new Color(1f, .65f, .25f); break;
             }
             bool boss = type == EnemyType.TreeSpirit || type == EnemyType.GiantBat || type == EnemyType.Morkan;
-            return new ActorVisualProfile(fallback, new Color(.075f, .07f, .09f, .96f), accent, boss ? new Vector2(1.25f, .38f) : new Vector2(.82f, .28f), boss ? 5f : 6f);
+            Vector2 shadowScale = boss ? new Vector2(1.25f, .38f) : new Vector2(.82f, .28f);
+            Vector2 shadowOffset = new Vector2(0f, -.38f);
+            if (type == EnemyType.Wolf)
+            {
+                shadowScale = new Vector2(.72f, .22f);
+                shadowOffset = new Vector2(0f, -.2f);
+            }
+            return new ActorVisualProfile(fallback, new Color(.075f, .07f, .09f, .96f), accent, shadowScale, shadowOffset, boss ? 5f : 6f);
         }
     }
 
@@ -101,8 +110,9 @@ namespace SoulArcher
             mainRenderer.color = normalColor;
 
             outlineRenderer = CreateLayer("Ink Outline", mainRenderer.sprite, profile.OutlineColor, Vector3.zero, Vector3.one * 1.06f, -1);
-            shadowRenderer = CreateLayer("Contact Shadow", RuntimeSpriteAtlas.Shadow(), new Color(.01f, .02f, .02f, .48f), new Vector3(0f, -.38f, 0f), new Vector3(profile.ShadowScale.x, profile.ShadowScale.y, 1f), -2);
-            targetRenderer = CreateLayer("Target Ring", RuntimeSpriteAtlas.Ring(), profile.AccentColor, new Vector3(0f, -.28f, 0f), Vector3.one * 1.05f, -1);
+            shadowRenderer = CreateLayer("Contact Shadow", RuntimeSpriteAtlas.Shadow(), new Color(.01f, .02f, .02f, .48f), new Vector3(profile.ShadowOffset.x, profile.ShadowOffset.y, 0f), new Vector3(profile.ShadowScale.x, profile.ShadowScale.y, 1f), -2);
+            Color targetColor = new Color(profile.AccentColor.r, profile.AccentColor.g, profile.AccentColor.b, .68f);
+            targetRenderer = CreateLayer("Target Ring", RuntimeSpriteAtlas.Ring(), targetColor, new Vector3(0f, -.28f, 0f), Vector3.one * .8f, -1);
             targetRenderer.enabled = false;
 
             if (hasHealthBar) BuildHealthBar();
@@ -186,7 +196,7 @@ namespace SoulArcher
             }
             if (targetRenderer != null && targetRenderer.enabled)
             {
-                float targetPulse = 1f + Mathf.Sin(Time.unscaledTime * 8f) * .07f;
+                float targetPulse = .8f + Mathf.Sin(Time.unscaledTime * 8f) * .045f;
                 targetRenderer.transform.localScale = Vector3.one * targetPulse;
             }
             if (healthVisible && Time.unscaledTime > flashUntil + 2f)

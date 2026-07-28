@@ -1,0 +1,11 @@
+Eman Quest Cave and Lava Tiles
+
+Source: https://opengameart.org/content/forest-and-dungeon-tilesets-from-eman-quest
+Author: Night Blade
+License: Creative Commons Zero 1.0 Universal (CC0 1.0)
+
+To the extent possible under law, the author has waived all copyright and
+related or neighboring rights to this work. This bundled copy is used as
+non-interactive cave environment decoration in Soul Archer.
+
+License text: https://creativecommons.org/publicdomain/zero/1.0/

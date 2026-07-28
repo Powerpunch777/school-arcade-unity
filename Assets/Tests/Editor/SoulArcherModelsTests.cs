@@ -128,10 +128,44 @@ public class SoulArcherModelsTests
         Assert.AreEqual(6, StageRules.Enemies(StageId.Forest).Length + StageRules.Enemies(StageId.Cave).Length + StageRules.Enemies(StageId.Castle).Length);
     }
 
+    [Test] public void CampaignPacingTargetsTwentyMinutesWithEscalatingWavesAndBossHealth() {
+        Assert.AreEqual(1200f, CampaignPacingRules.TargetRunSeconds);
+        Assert.AreEqual(8, CampaignPacingRules.EnemiesInRoom(StageId.Forest, false));
+        Assert.AreEqual(10, CampaignPacingRules.EnemiesInRoom(StageId.Forest, true));
+        Assert.AreEqual(10, CampaignPacingRules.EnemiesInRoom(StageId.Castle, false));
+        Assert.AreEqual(12, CampaignPacingRules.EnemiesInRoom(StageId.Castle, true));
+        Assert.AreEqual(26, CampaignPacingRules.EnemiesPerStage(StageId.Forest));
+        Assert.AreEqual(32, CampaignPacingRules.EnemiesPerStage(StageId.Castle));
+        Assert.Greater(CampaignPacingRules.EnemyHealth(EnemyType.GiantBat, StageId.Cave, false), CampaignPacingRules.EnemyHealth(EnemyType.TreeSpirit, StageId.Forest, false));
+        Assert.Greater(CampaignPacingRules.EnemyHealth(EnemyType.Morkan, StageId.Castle, false), CampaignPacingRules.EnemyHealth(EnemyType.GiantBat, StageId.Cave, false));
+        Assert.Greater(CampaignPacingRules.EnemyHealth(EnemyType.DarkMage, StageId.Castle, true), CampaignPacingRules.EnemyHealth(EnemyType.DarkMage, StageId.Castle, false));
+        Assert.LessOrEqual(CampaignPacingRules.WaveSize(StageId.Castle, true), 4);
+    }
+
     [Test] public void AllSixRegularEnemiesAndThreeBossesAreDistinct() {
         Assert.AreEqual(6, new[] { EnemyType.Wolf, EnemyType.Mushroom, EnemyType.RockBeetle, EnemyType.CrystalSpirit, EnemyType.ShieldSkeleton, EnemyType.DarkMage }.Distinct().Count());
         Assert.AreEqual(0, SoulRewardRules.For(EnemyType.Morkan));
         Assert.AreEqual(5, SoulRewardRules.For(EnemyType.GiantBat));
+    }
+
+    [Test] public void EnemyProjectileStylesKeepAttackSilhouettesAndSpeedsDistinct() {
+        Assert.AreEqual(9, System.Enum.GetValues(typeof(EnemyProjectileStyle)).Length);
+        Assert.Less(EnemyProjectileRules.SpeedFor(EnemyProjectileStyle.Boulder), EnemyProjectileRules.SpeedFor(EnemyProjectileStyle.CrystalShard));
+        Assert.Greater(EnemyProjectileRules.ScaleFor(EnemyProjectileStyle.ChaosFlame), EnemyProjectileRules.ScaleFor(EnemyProjectileStyle.PoisonSpore));
+        Assert.Greater(EnemyProjectileRules.HitRadiusFor(EnemyProjectileStyle.Boulder), EnemyProjectileRules.HitRadiusFor(EnemyProjectileStyle.ThornSeed));
+    }
+
+    [Test] public void BossAttackDeckProvidesFiveDistinctPatterns() {
+        BossAttackPattern[] patterns =
+        {
+            BossAttackPattern.FanVolley,
+            BossAttackPattern.GroundBurst,
+            BossAttackPattern.RingBurst,
+            BossAttackPattern.Charge,
+            BossAttackPattern.MeleeSweep
+        };
+        Assert.AreEqual(5, System.Enum.GetValues(typeof(BossAttackPattern)).Length);
+        Assert.AreEqual(5, patterns.Distinct().Count());
     }
 
     [Test] public void EasyDifficultyReducesDamageButNeverBelowHalfHeart() {
@@ -140,6 +174,13 @@ public class SoulArcherModelsTests
         var easy = new PlayerStats();
         Assert.IsTrue(easy.TakeDamage(2f, 0f, Difficulty.Easy));
         Assert.AreEqual(3.5f, easy.hearts);
+    }
+
+    [Test] public void EasyDifficultyExtendsPostHitProtection() {
+        var easy = new PlayerStats();
+        Assert.IsTrue(easy.TakeDamage(1f, 0f, Difficulty.Easy));
+        Assert.IsFalse(easy.TakeDamage(1f, 2.99f, Difficulty.Easy));
+        Assert.IsTrue(easy.TakeDamage(1f, 3f, Difficulty.Easy));
     }
 
     [Test] public void AbilityCardsAreUniqueAndExcludeThreeStackAbilities() {
@@ -212,8 +253,12 @@ public class SoulArcherModelsTests
     }
 
     private static void DefeatCurrentRoom(SoulArcherGame game) {
-        foreach (var enemy in Object.FindObjectsByType<EnemyActor>()) if (enemy != null && enemy.transform.IsChildOf(game.transform)) enemy.TakeDamage(10000f);
-        Assert.AreEqual(0, game.ActiveEnemyCount);
+        for (int wave = 0; wave < 8; wave++) {
+            foreach (var enemy in Object.FindObjectsByType<EnemyActor>()) if (enemy != null && enemy.transform.IsChildOf(game.transform)) enemy.TakeDamage(10000f);
+            InvokePrivate(game, "Update");
+            if (game.ActiveEnemyCount == 0) return;
+        }
+        Assert.Fail("Combat waves did not finish within the expected bound.");
     }
 
     private static void InvokePrivate(SoulArcherGame game, string methodName, params object[] arguments) {

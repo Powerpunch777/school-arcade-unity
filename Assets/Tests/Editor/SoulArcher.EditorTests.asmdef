@@ -1,7 +1,7 @@
 {
   "name": "SoulArcher.EditorTests",
   "rootNamespace": "SoulArcher.Tests",
-  "references": ["SoulArcher.Runtime"],
+  "references": ["SoulArcher.Runtime", "Unity.ugui"],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

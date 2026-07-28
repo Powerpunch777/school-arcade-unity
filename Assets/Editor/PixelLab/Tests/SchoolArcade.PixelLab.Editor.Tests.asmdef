@@ -1,0 +1,15 @@
+{
+  "name": "SchoolArcade.PixelLab.Editor.Tests",
+  "rootNamespace": "SchoolArcade.Editor.PixelLab.Tests",
+  "references": ["SchoolArcade.PixelLab.Editor"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll"],
+  "autoReferenced": false,
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "versionDefines": [],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "noEngineReferences": false
+}

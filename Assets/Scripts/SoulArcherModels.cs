@@ -16,6 +16,85 @@ namespace SoulArcher
         TreeSpirit, GiantBat, Morkan
     }
 
+    public enum EnemyProjectileStyle
+    {
+        EmberBolt,
+        PoisonSpore,
+        Boulder,
+        CrystalShard,
+        BoneLance,
+        VoidOrb,
+        ThornSeed,
+        SonicCrescent,
+        ChaosFlame
+    }
+
+    public enum BossAttackPattern
+    {
+        FanVolley,
+        GroundBurst,
+        RingBurst,
+        Charge,
+        MeleeSweep
+    }
+
+    public static class EnemyProjectileRules
+    {
+        public static Color ColorFor(EnemyProjectileStyle style)
+        {
+            switch (style)
+            {
+                case EnemyProjectileStyle.PoisonSpore: return new Color(.62f, .96f, .34f);
+                case EnemyProjectileStyle.Boulder: return new Color(.91f, .57f, .22f);
+                case EnemyProjectileStyle.CrystalShard: return new Color(.36f, .9f, 1f);
+                case EnemyProjectileStyle.BoneLance: return new Color(.78f, .86f, .98f);
+                case EnemyProjectileStyle.VoidOrb: return new Color(.94f, .3f, .92f);
+                case EnemyProjectileStyle.ThornSeed: return new Color(.72f, .96f, .32f);
+                case EnemyProjectileStyle.SonicCrescent: return new Color(.98f, .43f, .92f);
+                case EnemyProjectileStyle.ChaosFlame: return new Color(1f, .27f, .12f);
+                default: return new Color(1f, .48f, .18f);
+            }
+        }
+
+        public static float SpeedFor(EnemyProjectileStyle style)
+        {
+            switch (style)
+            {
+                case EnemyProjectileStyle.PoisonSpore: return 2.55f;
+                case EnemyProjectileStyle.Boulder: return 2.35f;
+                case EnemyProjectileStyle.CrystalShard: return 4.7f;
+                case EnemyProjectileStyle.BoneLance: return 5.1f;
+                case EnemyProjectileStyle.VoidOrb: return 3.5f;
+                case EnemyProjectileStyle.ThornSeed: return 4.05f;
+                case EnemyProjectileStyle.SonicCrescent: return 4.8f;
+                case EnemyProjectileStyle.ChaosFlame: return 4.25f;
+                default: return 3.4f;
+            }
+        }
+
+        public static float ScaleFor(EnemyProjectileStyle style)
+        {
+            switch (style)
+            {
+                case EnemyProjectileStyle.PoisonSpore: return .34f;
+                case EnemyProjectileStyle.Boulder: return .5f;
+                case EnemyProjectileStyle.CrystalShard: return .38f;
+                case EnemyProjectileStyle.BoneLance: return .42f;
+                case EnemyProjectileStyle.VoidOrb: return .46f;
+                case EnemyProjectileStyle.ThornSeed: return .4f;
+                case EnemyProjectileStyle.SonicCrescent: return .46f;
+                case EnemyProjectileStyle.ChaosFlame: return .48f;
+                default: return .36f;
+            }
+        }
+
+        public static float HitRadiusFor(EnemyProjectileStyle style)
+        {
+            return style == EnemyProjectileStyle.Boulder || style == EnemyProjectileStyle.ChaosFlame ? .58f :
+                style == EnemyProjectileStyle.VoidOrb || style == EnemyProjectileStyle.SonicCrescent ? .52f : .46f;
+        }
+    }
+
     public static class StageRules
     {
         public static readonly StageId[] Order = { StageId.Forest, StageId.Cave, StageId.Castle };
@@ -58,10 +137,10 @@ namespace SoulArcher
     public static class SpriteSorting
     {
         public const int Background = 0;
-        public const int WallAndProps = 10;
-        public const int Actor = 20;
-        public const int Projectile = 30;
-        public const int Ui = 100;
+        public const int WallAndProps = 100;
+        public const int Actor = 200;
+        public const int Projectile = 500;
+        public const int Ui = 1000;
     }
 
     public static class ArenaRules
@@ -91,6 +170,7 @@ namespace SoulArcher
     {
         public readonly List<RoomState> Rooms = new List<RoomState>();
         public int CurrentId { get; private set; }
+        public void ForceRoomId(int id) { CurrentId = id; }
         public StageId Stage { get; private set; }
         public RoomState Current { get { return Rooms[CurrentId]; } }
 
@@ -170,7 +250,10 @@ namespace SoulArcher
             return true;
         }
         public bool TakeDamage(float amount, float now, Difficulty difficulty, float invincibility = .5f)
-        { return TakeDamage(DifficultyRules.Damage(amount, difficulty), now, invincibility); }
+        {
+            float protectedWindow = difficulty == Difficulty.Easy ? Mathf.Max(invincibility, 3f) : invincibility;
+            return TakeDamage(DifficultyRules.Damage(amount, difficulty), now, protectedWindow);
+        }
         public void Heal(float amount) { hearts = Mathf.Min(MaxHearts, hearts + amount); }
         public int StackCount(Ability ability) { return abilityStacks[(int)ability]; }
         public void ApplyStageWhetstone() { stageWhetstone = true; RecalculateDerivedStats(); }
@@ -188,6 +271,43 @@ namespace SoulArcher
     public static class DifficultyRules
     {
         public static float Damage(float amount, Difficulty difficulty) { return difficulty == Difficulty.Easy ? Mathf.Max(.5f, amount - .5f) : amount; }
+    }
+
+    public static class CampaignPacingRules
+    {
+        public const float TargetRunSeconds = 20f * 60f;
+        public const float InterWaveDelay = 1.1f;
+
+        public static int EnemiesInRoom(StageId stage, bool elite)
+        {
+            int regularCount = stage == StageId.Forest ? 8 : stage == StageId.Cave ? 9 : 10;
+            return elite ? regularCount + 2 : regularCount;
+        }
+
+        public static int WaveSize(StageId stage, bool elite)
+        {
+            return stage == StageId.Castle && elite ? 4 : 3;
+        }
+
+        public static int WavesInRoom(StageId stage, bool elite)
+        {
+            return Mathf.CeilToInt(EnemiesInRoom(stage, elite) / (float)WaveSize(stage, elite));
+        }
+
+        public static float EnemyHealth(EnemyType type, StageId stage, bool elite)
+        {
+            if (type == EnemyType.TreeSpirit) return 850f;
+            if (type == EnemyType.GiantBat) return 1150f;
+            if (type == EnemyType.Morkan) return 1600f;
+
+            float health = stage == StageId.Forest ? 70f : stage == StageId.Cave ? 85f : 105f;
+            return elite ? Mathf.Round(health * 1.28f) : health;
+        }
+
+        public static int EnemiesPerStage(StageId stage)
+        {
+            return EnemiesInRoom(stage, false) * 2 + EnemiesInRoom(stage, true);
+        }
     }
 
     public static class SoulRewardRules

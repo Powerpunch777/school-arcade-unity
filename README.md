@@ -13,6 +13,12 @@ Unity `6000.5.3f1` 기반 Windows PC용 2D 액션 게임 구현입니다. 시작
 
 기본 출력은 1920×1080 FHD 전체화면이며 내부 UI 기준은 640×360입니다. 개인정보는 저장하지 않고 결과 요약만 `PlayerPrefs`에 최근 20판까지 저장합니다.
 
+## 공개 저장소 범위
+
+이 저장소는 실행 가능한 Unity 소스, 최종 런타임 에셋, 프로젝트 설정과 필요한 라이선스 고지를 포함합니다. 빌드 결과물, Unity 로컬 캐시, 자동 테스트 결과, QA 스크린샷 아카이브와 이미지 생성 중간산출물은 재현에 필요하지 않으므로 Git에서 제외합니다.
+
+프로젝트의 원본 코드와 자체 제작 리소스는 별도 오픈소스 라이선스를 부여하지 않습니다. 포함된 제3자 글꼴·UI·타일은 [THIRD_PARTY_NOTICES.md](Documentation/THIRD_PARTY_NOTICES.md)에 적힌 각 라이선스를 따릅니다.
+
 ## 검증 명령
 
 Windows PowerShell 기준입니다.
@@ -20,12 +26,12 @@ Windows PowerShell 기준입니다.
 ```powershell
 $unity = 'C:\Program Files\Unity\Hub\Editor\6000.5.3f1\Editor\Unity.exe'
 & $unity -batchmode -nographics -quit -projectPath (Get-Location) -logFile build-compile.log
-& $unity -batchmode -nographics -projectPath (Get-Location) -runTests -testPlatform EditMode -testResults Tests/editmode-results.xml -logFile tests-editmode.log
+& $unity -batchmode -projectPath (Get-Location) -runTests -testPlatform EditMode -testResults Tests/editmode-results.xml -logFile tests-editmode.log
 New-Item -ItemType Directory -Force Builds/CMP-208 | Out-Null
 & $unity -batchmode -nographics -quit -projectPath (Get-Location) -buildWindowsPlayer Builds/CMP-208/SoulArcher.exe -logFile Builds/CMP-208/build.log
 ```
 
-테스트 결과 XML은 `Tests/editmode-results.xml`, Windows 실행 파일은 `Builds/CMP-208/SoulArcher.exe`에 생성됩니다. 빌드 후 `Start-Process .\Builds\CMP-208\SoulArcher.exe`로 실행하고 5초 이상 타이틀 화면을 확인할 수 있습니다.
+테스트 결과 XML은 `Tests/editmode-results.xml`, Windows 실행 파일은 `Builds/CMP-208/SoulArcher.exe`에 생성됩니다. 렌더링을 확인하는 EditMode 테스트가 있으므로 테스트 명령에는 `-nographics`를 사용하지 않습니다. 빌드 후 `Start-Process .\Builds\CMP-208\SoulArcher.exe`로 실행하고 5초 이상 타이틀 화면을 확인할 수 있습니다.
 
 ## 구현 구조
 
