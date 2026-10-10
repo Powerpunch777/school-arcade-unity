@@ -1,76 +1,58 @@
 # 소울 아처 (Soul Archer)
 
-**움직이면 회피하고, 멈추면 공격합니다.** 정지하면 가까운 적을 자동으로 조준하는 2D 액션 게임으로, 위험을 피할지 공격할 시간을 확보할지 계속 판단하도록 설계했습니다.
+**움직이면 회피하고, 멈추면 공격합니다.** 궁수 레온을 조작해 숲과 동굴, 마왕의 성을 지나 엘리아 공주를 구하는 싱글플레이 2D 액션 게임입니다. 언제 움직이고 언제 멈춰 싸울지 판단하는 것이 플레이의 중심입니다.
 
-[English](README.md) · [게임 기획 문서](https://github.com/Powerpunch777/school-arcade-design) · [SPS 개발 작업환경](https://github.com/Powerpunch777/SPS)
+[English](README.md)
 
-![CMP-265 빌드에서 직접 캡처한 첫 숲 전투 화면](Documentation/Media/forest-combat.jpg)
+![첫 숲 전투에서 적을 향해 화살을 쏘는 레온](Documentation/Media/forest-combat.jpg)
 
-*바탕화면에 제공된 CMP-265 빌드를 실행하고 일반 메뉴로 진행해 캡처했습니다. 왼쪽은 플레이어, 왼쪽 위는 체력, 오른쪽 위는 방 연결을 보여 주는 미니맵입니다.*
+*첫 숲 전투 화면입니다. 왼쪽의 레온이 늑대와 버섯 적을 상대합니다. 움직이면 위험을 피할 수 있지만, 다음 화살을 쏘려면 멈춰야 합니다.*
 
-## 프로젝트와 담당 역할
+## 어떤 게임인가요?
 
-생성형 AI가 게임 개발에 어떤 도움을 줄 수 있는지 직접 확인하기 위해 시작한 학교 프로젝트입니다. 저는 기획과 핵심 규칙 설계, 구현 방향 결정, 플레이테스트를 맡았고, AI를 아이디어의 빠른 구현과 시각자료 제작을 돕는 도구로 활용했습니다.
+### 공격할 순간을 찾습니다
 
-개발 중 그래픽이 의도대로 표시되지 않는 문제를 발견해 생성형 이미지로 대체 자료를 만들고 수정했습니다. 게임이 너무 쉽고 빨리 끝나는 문제는 몬스터 체력과 보스 패턴을 조정하며 개선했습니다. 처음의 아이디어를 그대로 구현하는 것만큼 실제로 플레이하고 수정하는 과정이 중요하다는 점을 배웠습니다.
+WASD나 방향키로 이동합니다. 이동 중에는 새 화살을 발사할 수 없고, 이동 키에서 손을 떼면 화면 안의 가장 가까운 적을 자동으로 조준해 공격합니다.
 
-작업환경으로는 함께 개발 중인 [SPS](https://github.com/Powerpunch777/SPS)를 사용했습니다. 게임을 만들면서 도구의 불편한 점을 발견하고, 게임과 작업환경을 함께 개선했습니다.
+이 단순한 규칙으로 타이밍과 위치 선정이 중요해지도록 만들고 싶었습니다. 멈추면 적에게 피해를 줄 수 있지만 그만큼 공격에 노출됩니다. 적이 다가오는 상황에서 한 발 더 쏠 시간이 있는지, 안전한 곳으로 움직여야 할지 판단해야 합니다.
 
-![첫 방을 클리어한 뒤 이동 속도, 관통, 공격 속도 중 하나를 고르는 화면](Documentation/Media/ability-selection.jpg)
+### 다음 전투를 위한 능력을 고릅니다
 
-*첫 방을 클리어한 뒤 실제로 도달한 능력 선택 화면입니다. 이 장면에서는 이동 속도, 관통, 공격 속도 중 하나를 선택합니다.*
+방을 클리어하고 능력을 고르며, 상점을 방문하고 각 지역의 보스로 향하는 길을 찾습니다. 숲에서 동굴로, 마지막에는 성으로 이어지며 지역마다 다른 적과 보스 패턴을 만나게 됩니다.
+
+![이동 속도, 관통, 공격 속도 중 하나를 고르는 능력 선택 화면](Documentation/Media/ability-selection.jpg)
+
+*첫 방을 클리어한 뒤 나온 선택지입니다. 더 빠르게 이동할지, 화살로 적 하나를 더 관통할지, 공격 간격을 줄일지 선택합니다. 선택한 능력에 따라 다음 전투에 대응하는 방법이 달라집니다.*
 
 <details>
 <summary>타이틀 화면 보기</summary>
 
-![CMP-265의 소울 아처 타이틀 화면](Documentation/Media/title.jpg)
+![달빛 아래 성을 배경으로 한 소울 아처 타이틀 화면](Documentation/Media/title.jpg)
+
+*여기서 여정을 시작합니다. 쉬움 또는 보통 난이도로 새 게임을 시작하거나, 이전 전적과 조작법을 확인할 수 있습니다.*
 
 </details>
 
-## 구현 개요
+*세 이미지는 모두 CMP-265 Windows 빌드를 직접 실행해 캡처했습니다. 현재 게임 화면은 한국어입니다.*
 
-Unity `6000.5.3f1` 기반 Windows PC용 2D 액션 게임 구현입니다. 시작 씬은 `Assets/Scenes/ForestSlice.unity`이며 타이틀에서 난이도, 3장 도입 컷신, 숲·동굴·마왕의 성 캠페인, 공주 구출 엔딩과 결과/전적 화면으로 이어집니다.
+## 만든 이유와 제가 맡은 일
 
-## 실행
+생성형 AI가 게임 개발을 어떻게 도울 수 있는지 탐구하는 학교 프로젝트로 시작했습니다. 직접 플레이하고 개선할 수 있는 게임을 만들어 그 가능성을 확인하고 싶었습니다.
 
-1. Unity Hub에서 이 폴더를 Unity `6000.5.3f1`로 엽니다.
-2. `Assets/Scenes/ForestSlice.unity`를 연 뒤 Play를 누릅니다.
-3. 타이틀에서 `[1] 새 게임`을 선택하고 `[1] 쉬움` 또는 `[2] 보통`을 고릅니다.
-4. WASD/방향키로 이동합니다. 이동 중에는 새 화살을 발사하지 않으며, 정지하면 화면 안의 가장 가까운 살아 있는 적을 자동 조준합니다.
-5. 방을 클리어한 뒤 상하좌우 출구로 이동합니다. 능력 카드·상점·메뉴는 마우스 또는 `1/2/3`, 컷신은 마우스나 `Space/Enter`, 일시정지는 `Esc`입니다.
-6. 결과 화면에서 `R`은 처음부터 재시작, `H`는 전적, `T`는 타이틀입니다.
+저는 기획, 핵심 규칙 설계, 구현 방향 결정, 플레이테스트를 맡았습니다. AI는 아이디어를 빠르게 구현하고 시각자료를 만드는 데 활용했습니다. 게임이 어떻게 작동해야 하는지 결정하고, 결과를 검토하며, 무엇을 수정할지 찾는 것은 제가 담당했습니다.
 
-기본 출력은 1920×1080 FHD 전체화면이며 내부 UI 기준은 640×360입니다. 개인정보는 저장하지 않고 결과 요약만 `PlayerPrefs`에 최근 20판까지 저장합니다.
+## 플레이하면서 바꾼 것
 
-## 공개 저장소 범위
+**전투가 의미 있는 선택으로 이어지도록 조정했습니다.** 초기에는 게임이 너무 쉽고 빨리 끝났습니다. 이동과 공격 사이에서 판단할 필요가 더 생기도록 몬스터 체력과 보스 패턴을 조정하고, 다시 플레이하며 변화를 확인했습니다.
 
-이 저장소는 실행 가능한 Unity 소스, 최종 런타임 에셋, 프로젝트 설정과 필요한 라이선스 고지를 포함합니다. 빌드 결과물, Unity 로컬 캐시, 자동 테스트 결과, 전체 QA 스크린샷 아카이브와 이미지 생성 중간산출물은 Git에서 제외합니다. README 소개용 실행 화면만 [Documentation/Media](Documentation/Media/README.md)에 별도로 포함합니다.
+**그래픽은 실제 게임 안에서 확인하며 수정했습니다.** 의도대로 표시되지 않는 그래픽은 생성형 이미지 도구로 대체 자료를 만들고 수정했습니다. 캐릭터, 적, 배경, 인터페이스가 함께 보이는 게임 화면에서 결과를 확인했습니다.
 
-프로젝트의 원본 코드와 자체 제작 리소스는 별도 오픈소스 라이선스를 부여하지 않습니다. 포함된 제3자 글꼴·UI·타일은 [THIRD_PARTY_NOTICES.md](Documentation/THIRD_PARTY_NOTICES.md)에 적힌 각 라이선스를 따릅니다.
+이 과정에서 아이디어가 실행되게 만드는 것은 시작이라는 점을 배웠습니다. 기획만으로는 보이지 않던 문제가 플레이 중 드러났고, 그 문제가 다음에 무엇을 만들어야 할지 결정하는 기준이 되었습니다.
 
-## 검증 명령
+작업환경으로는 함께 개발 중인 [SPS](https://github.com/Powerpunch777/SPS)를 사용했습니다. Soul Archer를 만들며 작업환경의 부족한 점을 발견했고, 게임과 도구를 함께 개선했습니다.
 
-Windows PowerShell 기준입니다.
+## 더 살펴보기
 
-```powershell
-$unity = 'C:\Program Files\Unity\Hub\Editor\6000.5.3f1\Editor\Unity.exe'
-& $unity -batchmode -nographics -quit -projectPath (Get-Location) -logFile build-compile.log
-& $unity -batchmode -projectPath (Get-Location) -runTests -testPlatform EditMode -testResults Tests/editmode-results.xml -logFile tests-editmode.log
-New-Item -ItemType Directory -Force Builds/CMP-208 | Out-Null
-& $unity -batchmode -nographics -quit -projectPath (Get-Location) -buildWindowsPlayer Builds/CMP-208/SoulArcher.exe -logFile Builds/CMP-208/build.log
-```
+[게임 기획 문서](https://github.com/Powerpunch777/school-arcade-design) · [Unity 실행 및 개발 안내](Documentation/Development.ko.md) · [에셋 출처와 라이선스](Documentation/THIRD_PARTY_NOTICES.md)
 
-테스트 결과 XML은 `Tests/editmode-results.xml`, Windows 실행 파일은 `Builds/CMP-208/SoulArcher.exe`에 생성됩니다. 렌더링을 확인하는 EditMode 테스트가 있으므로 테스트 명령에는 `-nographics`를 사용하지 않습니다. 빌드 후 `Start-Process .\Builds\CMP-208\SoulArcher.exe`로 실행하고 5초 이상 타이틀 화면을 확인할 수 있습니다.
-
-## 구현 구조
-
-- `Assets/Scripts/SoulArcherModels.cs`: 스테이지·방 그래프, 플레이어 체력/무적/난이도, 자동 조준, 6종 능력 중첩, 상점 경제와 최근 20판 통계 모델.
-- `Assets/Scripts/SoulArcherGame.cs`: 타이틀·난이도·컷신·3스테이지 진행, 전투/보스 패턴, 투사체, 상점·능력·HUD·미니맵·결과 화면.
-- `Assets/Tests/Editor/SoulArcherModelsTests.cs`: 자동 조준, 이동 중 발사 금지, 피해/무적/사망, 분기 방 재방문, 보상/상점, 능력 후보/중첩, 난이도, 전적과 전체 3스테이지 진행 검증.
-- `Assets/Resources/Art` 및 `Assets/Resources/Audio`: 승인된 설계 저장소 자산을 런타임 `Resources.Load`로 연결한 사본. 원본 경로는 `Documentation/AssetManifest.md`에 기록합니다.
-
-## 알려진 제한사항
-
-- 외부 유료 패키지 없이 Unity 기본 `SpriteRenderer`와 IMGUI를 사용합니다. 승인 PNG 스프라이트 시트를 런타임에서 셀 단위로 잘라 플레이어·적·보스 애니메이션과 타일 배경에 사용하고, 승인 WAV를 스테이지 음악과 주요 효과음에 연결합니다.
-- 화면 밖 적의 고급 경고 화살표와 방 내부 장애물의 세밀한 물리 충돌은 후속 연출 개선 영역입니다. 방 경계 반사, 배우·투사체 충돌, 이동·정지 자동 공격, 방 상태, 보스와 결과 흐름은 구현되어 있습니다.
-- WebGL, 모바일, 영어 현지화와 외부 배포는 범위에 포함하지 않습니다.
+Unity와 C#으로 제작한 Windows 게임입니다. 원본 코드와 자체 제작 리소스에는 별도 오픈소스 라이선스를 부여하지 않으며, 제3자 에셋에는 각각의 라이선스가 적용됩니다.
