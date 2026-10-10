@@ -1,47 +1,107 @@
-# 소울 아처 (Soul Archer)
+# Soul Archer
 
-Unity `6000.5.3f1` 기반 Windows PC용 2D 액션 게임 구현입니다. 시작 씬은 `Assets/Scenes/ForestSlice.unity`이며 타이틀에서 난이도, 3장 도입 컷신, 숲·동굴·마왕의 성 캠페인, 공주 구출 엔딩과 결과/전적 화면으로 이어집니다.
+**Move to dodge. Stop to shoot.** Soul Archer is a 2D action game built in Unity for Windows. The player controls an archer who automatically targets nearby enemies while standing still, creating a repeated choice between avoiding danger and dealing damage.
 
-## 실행
+[한국어](README.ko.md) · [Game design documents](https://github.com/Powerpunch777/school-arcade-design) · [SPS development workspace](https://github.com/Powerpunch777/SPS) · [Run the project](#run-the-project)
 
-1. Unity Hub에서 이 폴더를 Unity `6000.5.3f1`로 엽니다.
-2. `Assets/Scenes/ForestSlice.unity`를 연 뒤 Play를 누릅니다.
-3. 타이틀에서 `[1] 새 게임`을 선택하고 `[1] 쉬움` 또는 `[2] 보통`을 고릅니다.
-4. WASD/방향키로 이동합니다. 이동 중에는 새 화살을 발사하지 않으며, 정지하면 화면 안의 가장 가까운 살아 있는 적을 자동 조준합니다.
-5. 방을 클리어한 뒤 상하좌우 출구로 이동합니다. 능력 카드·상점·메뉴는 마우스 또는 `1/2/3`, 컷신은 마우스나 `Space/Enter`, 일시정지는 `Esc`입니다.
-6. 결과 화면에서 `R`은 처음부터 재시작, `H`는 전적, `T`는 타이틀입니다.
+![Soul Archer running in the forest: the archer fires toward enemies, with hearts, upgrades, and a room map visible.](Documentation/Media/forest-combat.jpg)
 
-기본 출력은 1920×1080 FHD 전체화면이며 내부 UI 기준은 640×360입니다. 개인정보는 저장하지 않고 결과 요약만 `PlayerPrefs`에 최근 20판까지 저장합니다.
+*Captured directly from the CMP-265 Windows build. The archer is on the left; hearts show health, and the map in the upper right shows connected rooms. The game's interface is currently in Korean.*
 
-## 공개 저장소 범위
+## The project in brief
 
-이 저장소는 실행 가능한 Unity 소스, 최종 런타임 에셋, 프로젝트 설정과 필요한 라이선스 고지를 포함합니다. 빌드 결과물, Unity 로컬 캐시, 자동 테스트 결과, QA 스크린샷 아카이브와 이미지 생성 중간산출물은 재현에 필요하지 않으므로 Git에서 제외합니다.
+I started Soul Archer as a school project to explore how generative AI could support game development. I wanted to move beyond reading about the tools and test an idea in a game I could actually play, inspect, and revise.
 
-프로젝트의 원본 코드와 자체 제작 리소스는 별도 오픈소스 라이선스를 부여하지 않습니다. 포함된 제3자 글꼴·UI·타일은 [THIRD_PARTY_NOTICES.md](Documentation/THIRD_PARTY_NOTICES.md)에 적힌 각 라이선스를 따릅니다.
+| Project | Details |
+| --- | --- |
+| Format | Single-player 2D action game with upgrades chosen during each run |
+| Tools | Unity 6000.5.3f1, C#, AI-assisted development and art production |
+| Platform | Windows PC; source project included in this repository |
+| Campaign | Forest, cave, and castle, each with its own enemies and boss |
+| My role | Project planning, game rules, implementation direction, playtesting, and iteration |
 
-## 검증 명령
+## The main design idea
 
-Windows PowerShell 기준입니다.
+Movement and attacking compete for the player's attention. While moving, the archer does not fire new arrows. When the player stops, the game targets the nearest living enemy within the screen and fires automatically.
 
-```powershell
-$unity = 'C:\Program Files\Unity\Hub\Editor\6000.5.3f1\Editor\Unity.exe'
-& $unity -batchmode -nographics -quit -projectPath (Get-Location) -logFile build-compile.log
-& $unity -batchmode -projectPath (Get-Location) -runTests -testPlatform EditMode -testResults Tests/editmode-results.xml -logFile tests-editmode.log
-New-Item -ItemType Directory -Force Builds/CMP-208 | Out-Null
-& $unity -batchmode -nographics -quit -projectPath (Get-Location) -buildWindowsPlayer Builds/CMP-208/SoulArcher.exe -logFile Builds/CMP-208/build.log
-```
+The controls are simple, but the decision changes with the situation: stay still long enough to deal damage, or move before an enemy or projectile reaches you. Enemy health, attack patterns, and room layouts all affect how much time the player has to make that choice.
 
-테스트 결과 XML은 `Tests/editmode-results.xml`, Windows 실행 파일은 `Builds/CMP-208/SoulArcher.exe`에 생성됩니다. 렌더링을 확인하는 EditMode 테스트가 있으므로 테스트 명령에는 `-nographics`를 사용하지 않습니다. 빌드 후 `Start-Process .\Builds\CMP-208\SoulArcher.exe`로 실행하고 5초 이상 타이틀 화면을 확인할 수 있습니다.
+A run moves through connected combat rooms, shops, upgrade choices, and bosses. Six upgrade types include attack power, attack speed, piercing arrows, bouncing arrows, healing, and movement speed. The campaign ends with a rescue scene and a results screen; recent run summaries are stored locally.
 
-## 구현 구조
+## Screens from the game
 
-- `Assets/Scripts/SoulArcherModels.cs`: 스테이지·방 그래프, 플레이어 체력/무적/난이도, 자동 조준, 6종 능력 중첩, 상점 경제와 최근 20판 통계 모델.
-- `Assets/Scripts/SoulArcherGame.cs`: 타이틀·난이도·컷신·3스테이지 진행, 전투/보스 패턴, 투사체, 상점·능력·HUD·미니맵·결과 화면.
-- `Assets/Tests/Editor/SoulArcherModelsTests.cs`: 자동 조준, 이동 중 발사 금지, 피해/무적/사망, 분기 방 재방문, 보상/상점, 능력 후보/중첩, 난이도, 전적과 전체 3스테이지 진행 검증.
-- `Assets/Resources/Art` 및 `Assets/Resources/Audio`: 승인된 설계 저장소 자산을 런타임 `Resources.Load`로 연결한 사본. 원본 경로는 `Documentation/AssetManifest.md`에 기록합니다.
+These images were captured by launching the **CMP-265 Windows build** and using its normal game menus. They show the running game, including its Korean UI.
 
-## 알려진 제한사항
+![Upgrade selection after clearing the first room: movement speed, piercing arrows, or attack speed.](Documentation/Media/ability-selection.jpg)
 
-- 외부 유료 패키지 없이 Unity 기본 `SpriteRenderer`와 IMGUI를 사용합니다. 승인 PNG 스프라이트 시트를 런타임에서 셀 단위로 잘라 플레이어·적·보스 애니메이션과 타일 배경에 사용하고, 승인 WAV를 스테이지 음악과 주요 효과음에 연결합니다.
-- 화면 밖 적의 고급 경고 화살표와 방 내부 장애물의 세밀한 물리 충돌은 후속 연출 개선 영역입니다. 방 경계 반사, 배우·투사체 충돌, 이동·정지 자동 공격, 방 상태, 보스와 결과 흐름은 구현되어 있습니다.
-- WebGL, 모바일, 영어 현지화와 외부 배포는 범위에 포함하지 않습니다.
+*After clearing the first room, the player chooses an upgrade. The three options shown here are movement speed, arrows that pierce an additional enemy, and faster attacks. Each choice changes the tools available for the next encounter.*
+
+<details>
+<summary>View the title screen</summary>
+
+![Soul Archer title screen with the castle background and four menu choices.](Documentation/Media/title.jpg)
+
+*The title menu offers New Game, Run History, Controls, and Settings. Selecting New Game leads to Easy or Normal difficulty and the opening story scenes.*
+
+</details>
+
+## My contribution and use of AI
+
+I planned the game, defined its core rules, decided the implementation direction, and tested the results. I used AI tools to help turn ideas into working implementations quickly and to create visual material that I could review and revise.
+
+My responsibility was to decide what the game should do, identify where the result did not work, and guide the next change. AI assistance is part of the development process represented here. The project also uses third-party font, UI, and tile assets, credited in [Third-party notices](Documentation/THIRD_PARTY_NOTICES.md).
+
+## What changed through playtesting
+
+**Visual problems led to asset revision.** When graphics did not display as intended, I used generated imagery to create replacement material and then revised it. The important check was how the assets worked inside the game, alongside the character, enemies, and interface.
+
+**Short, easy encounters led to balance changes.** Early play sessions ended too quickly and offered too little challenge. I adjusted monster health and boss patterns, then played again to assess the effect. Those changes were intended to give the movement-versus-attack decision more weight.
+
+This taught me to treat an initial implementation as something to test. A rule can sound interesting on paper and still need substantial revision before it produces the intended experience.
+
+## How SPS fits into the process
+
+I used [SPS](https://github.com/Powerpunch777/SPS), an AI development workspace I am also developing, while working on Soul Archer. The game gave me a real project with which to find limitations in the tools. I could then improve the workspace as well as the game.
+
+The [design repository](https://github.com/Powerpunch777/school-arcade-design) contains the planning documents. This repository contains the Unity implementation, runtime assets, and tests.
+
+## Run the project
+
+The screenshots can be viewed without installing anything. To run the source project:
+
+<details>
+<summary>Unity setup, controls, and source code guide</summary>
+
+1. Clone or download this repository.
+2. Open the project in Unity Hub with **Unity 6000.5.3f1**.
+3. Open `Assets/Scenes/ForestSlice.unity` and press **Play**.
+4. Select **[1] 새 게임** (New Game), then **[1] 쉬움** (Easy) or **[2] 보통** (Normal).
+
+| Action | Input |
+| --- | --- |
+| Move | WASD or arrow keys |
+| Attack | Release movement keys; firing is automatic when a target is available |
+| Choose an upgrade, shop item, or menu option | Mouse or 1 / 2 / 3, as shown on screen |
+| Advance story scenes | Mouse, Space, or Enter |
+| Pause | Esc |
+| Results screen | R: restart · H: history · T: title |
+
+The default display is 1920 × 1080 fullscreen. Settings also offer a 1280 × 720 window. Compiled Windows builds are not included in this source repository.
+
+## For readers who want to inspect the implementation
+
+- [SoulArcherModels.cs](Assets/Scripts/SoulArcherModels.cs) — game rules: targeting, firing conditions, health, room progression, upgrades, economy, and run history.
+- [SoulArcherGame.cs](Assets/Scripts/SoulArcherGame.cs) — game flow, combat, boss patterns, rendering, audio, and menus.
+- [SoulArcherModelsTests.cs](Assets/Tests/Editor/SoulArcherModelsTests.cs) — checks for rules and campaign progression.
+- [Implementation scope](Documentation/ImplementationScope.md) — implemented systems and recorded validation.
+- [Build and test commands](README.ko.md#검증-명령) — PowerShell commands for compilation, EditMode tests, and a Windows build.
+
+</details>
+
+## Current limits and credits
+
+This is a student project with a playable Windows campaign. English localization, WebGL, mobile support, and external distribution are outside the current documented scope. More detailed obstacle collision and off-screen enemy indicators remain areas for improvement.
+
+The repository includes source code and final runtime assets. Local Unity caches, build output, and the full QA archive are excluded; selected presentation screenshots are stored in [Documentation/Media](Documentation/Media/README.md).
+
+Original project code and custom resources have no separate open-source license. Third-party assets retain their own licenses; see [Third-party notices](Documentation/THIRD_PARTY_NOTICES.md) and the [asset manifest](Documentation/AssetManifest.md).
