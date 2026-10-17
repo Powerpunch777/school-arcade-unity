@@ -4,9 +4,17 @@
 
 [한국어](README.ko.md)
 
-![Leon fires an arrow toward enemies in the first forest room.](Documentation/Media/forest-combat.jpg)
+## Watch the game in action
 
-*The opening forest encounter. Leon is on the left, facing wolves and a mushroom enemy. Moving helps him avoid danger, but he must stop to fire another arrow.*
+[![A short gameplay preview: Leon moves through the forest and fights approaching enemies. Click to watch the video.](docs/gameplay-preview.gif)](https://powerpunch777.github.io/school-arcade-unity/)
+
+**[▶ Watch the 34-second gameplay video](https://powerpunch777.github.io/school-arcade-unity/)** · [Download MP4](https://powerpunch777.github.io/school-arcade-unity/gameplay.mp4)
+
+See Leon dodge enemies, stop to fire, and choose an upgrade after clearing the opening forest room. The clip is actual gameplay at normal speed, with no audio. English captions explain the Korean interface; Korean captions are also available in the player.
+
+- **0:00 — Forest combat:** move around approaching enemies and their projectiles, then stop to attack.
+- **0:26 — Choose an upgrade:** this run offers piercing arrows, attack speed, and movement speed.
+- **0:30 — Prepare to continue:** select piercing arrows and return to the cleared room.
 
 ## How it plays
 
@@ -25,7 +33,11 @@ Clear rooms, choose upgrades, visit shops, and find a route to each area's boss.
 *After the first room, this run offers three choices: move faster, shoot through an additional enemy, or attack more quickly. The choice changes how the player can approach the next encounter.*
 
 <details>
-<summary>See the title screen</summary>
+<summary>More screenshots</summary>
+
+![Leon fires an arrow toward enemies in the first forest room.](Documentation/Media/forest-combat.jpg)
+
+*The opening forest encounter, captured in a separate run.*
 
 ![Soul Archer's title menu against a moonlit castle.](Documentation/Media/title.jpg)
 
@@ -33,7 +45,7 @@ Clear rooms, choose upgrades, visit shops, and find a route to each area's boss.
 
 </details>
 
-*All three screenshots were captured from the running CMP-265 Windows build. The game interface is currently in Korean.*
+*The video and screenshots were captured from the running CMP-265 Windows build. The game interface is currently in Korean. [Capture notes](Documentation/Media/README.md).*
 
 ## Why I made it and what I contributed
 

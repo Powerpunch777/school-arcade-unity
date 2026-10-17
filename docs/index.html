@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Watch Soul Archer gameplay: move to dodge, stop to shoot, and choose an upgrade after clearing a room.">
+  <title>Soul Archer — Gameplay</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #101914; color: #f4f3e9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1100px; margin: auto; padding: 24px 24px 48px; }
+    nav { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 24px; font-size: 14px; }
+    a { color: #e8c879; text-underline-offset: 4px; }
+    a:hover { color: white; }
+    a:focus-visible { outline: 2px solid #e8c879; outline-offset: 5px; }
+    .eyebrow { color: #b0bfae; letter-spacing: .16em; font-size: 12px; text-transform: uppercase; }
+    h1 { font-size: clamp(30px, 5vw, 46px); letter-spacing: -.04em; margin: 12px 0; line-height: 1.1; }
+    .intro { color: #cbd4c7; font-size: 17px; line-height: 1.6; max-width: 850px; margin-bottom: 18px; }
+    video { display: block; width: 100%; max-height: 65vh; object-fit: contain; background: black; border: 1px solid #3c4b3e; border-radius: 8px; }
+    .meta { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; color: #aebdad; font-size: 13px; line-height: 1.7; margin: 14px 0 32px; }
+    .notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; border-top: 1px solid #3c4b3e; padding-top: 24px; }
+    h2 { font-size: 17px; margin: 0 0 10px; }
+    .notes p { color: #bdc9b9; font-size: 15px; line-height: 1.65; margin: 0; }
+    footer { color: #94a38f; font-size: 12px; line-height: 1.7; margin-top: 36px; }
+    @media(max-width: 640px) { main { padding: 28px 16px; } nav { margin-bottom: 36px; } .notes { grid-template-columns: 1fr; gap: 24px; } }
+  </style>
+</head>
+<body>
+<main>
+  <nav aria-label="Project links">
+    <a href="https://github.com/Powerpunch777/school-arcade-unity#readme">Read about the project ↗</a>
+    <a lang="ko" href="https://github.com/Powerpunch777/school-arcade-unity/blob/main/README.ko.md">한국어 소개 ↗</a>
+  </nav>
+  <p class="eyebrow">Soul Archer · Gameplay</p>
+  <h1>Move to dodge. Stop to shoot.</h1>
+  <p class="intro">An opening encounter in the forest: find room to move, stop to fire, and choose an ability for the next fight.</p>
+  <video controls playsinline preload="metadata" poster="poster.jpg" aria-label="Soul Archer opening forest gameplay">
+    <source src="gameplay.mp4" type="video/mp4">
+    <track kind="captions" src="captions.en.vtt" srclang="en" label="English" default>
+    <track kind="captions" src="captions.ko.vtt" srclang="ko" label="한국어">
+    <p><a href="gameplay.mp4">Download the gameplay video</a>.</p>
+  </video>
+  <div class="meta"><span>Actual Windows gameplay · Silent video · English / 한국어 captions</span><a href="gameplay.mp4" download>Download video</a></div>
+  <section class="notes" aria-label="What to watch for">
+    <div><h2>01 / Make space</h2><p>Move away from approaching enemies and their attacks. Positioning creates a chance to fight back.</p></div>
+    <div><h2>02 / Stop and fire</h2><p>Leon automatically aims and fires while standing still. Moving pauses new shots.</p></div>
+    <div><h2>03 / Choose an ability</h2><p>After clearing the room, pick one of three upgrades before continuing.</p></div>
+  </section>
+  <footer>Recorded from the supplied CMP-265 build on October 17, 2026. The game interface is in Korean. This clip shows the opening forest room.</footer>
+</main>
+</body>
+</html>
