@@ -30,7 +30,7 @@ Clear rooms, choose upgrades, visit shops, and find a route to each area's boss.
 
 ![Three upgrade cards offer movement speed, piercing arrows, or attack speed.](Documentation/Media/ability-selection.jpg)
 
-*After the first room, this run offers three choices: move faster, shoot through an additional enemy, or attack more quickly. The choice changes how the player can approach the next encounter.*
+*In this separate playthrough, the first room offers three choices: move faster, shoot through an additional enemy, or attack more quickly. The choice changes how the player can approach the next encounter.*
 
 <details>
 <summary>More screenshots</summary>
