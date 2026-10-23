@@ -8,13 +8,14 @@
 
 [![A short gameplay preview: Leon moves through the forest and fights approaching enemies. Click to watch the video.](docs/gameplay-preview.gif)](https://powerpunch777.github.io/school-arcade-unity/)
 
-**[▶ Watch the 34-second gameplay video](https://powerpunch777.github.io/school-arcade-unity/)** · [Download MP4](https://powerpunch777.github.io/school-arcade-unity/gameplay.mp4)
+**[▶ Watch the 70-second gameplay video with sound](https://powerpunch777.github.io/school-arcade-unity/)** · [Download MP4](https://powerpunch777.github.io/school-arcade-unity/gameplay.mp4?v=20261023)
 
-See Leon dodge enemies, stop to fire, and choose an upgrade after clearing the opening forest room. The clip is actual gameplay at normal speed, with no audio. English captions explain the Korean interface; Korean captions are also available in the player.
+See Leon dodge enemies, stop to fire, choose an upgrade, and enter the next forest room. The clip is actual gameplay at normal speed, recorded with the game's music and sound effects. English captions explain the Korean interface; Korean captions are also available in the player. The animated preview above is silent—open the full video to hear the game.
 
 - **0:00 — Forest combat:** move around approaching enemies and their projectiles, then stop to attack.
-- **0:26 — Choose an upgrade:** this run offers piercing arrows, attack speed, and movement speed.
-- **0:30 — Prepare to continue:** select piercing arrows and return to the cleared room.
+- **0:51 — Choose an upgrade:** this run offers piercing arrows, attack power, and healing.
+- **0:56 — Prepare to continue:** select piercing arrows and return to the cleared room.
+- **1:00 — Enter the next room:** a new encounter begins.
 
 ## How it plays
 

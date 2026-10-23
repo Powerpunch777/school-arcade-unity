@@ -6,11 +6,20 @@ Move to dodge approaching enemies and projectiles.
 00:08.000 --> 00:16.000
 Stop moving to aim and fire automatically.
 
-00:16.000 --> 00:25.566
+00:16.000 --> 00:24.000
+Keep moving when enemy projectiles get too close.
+
+00:24.000 --> 00:32.000
 Clear the enemy waves to finish the room.
 
-00:25.566 --> 00:29.666
-Choose an upgrade: piercing arrows, attack speed, or movement speed.
+00:42.000 --> 00:50.000
+Defeat the remaining enemies to earn an upgrade.
 
-00:29.666 --> 00:34.000
+00:51.200 --> 00:55.867
+Choose an upgrade: piercing arrows, attack power, or healing.
+
+00:55.867 --> 01:00.000
 Piercing arrows selected. Ready for the next room.
+
+01:00.000 --> 01:10.000
+A new room brings another wave of enemies.
